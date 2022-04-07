@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 
 # Load packages
 #---------------------------------------
@@ -29,24 +29,30 @@ change_98_19 <- read.csv(here("Soroush", "data_whole_98_19.csv")) %>%
 
 ```{r}
 
-# Tidy Change Data
+# Tidy Change Data for sankey plot
 #---------------------------------------
-
 # 1987 to 1998
 change_87_98_tidy <- change_87_98 %>% 
   pivot_longer(!land_use:area_starting_year, names_to = "target",
                values_to = "change_87_98") %>% 
-  rename("1987" = area_starting_year)
+  rename("source" = land_use) %>% 
+  rename("total_1987" = area_starting_year)
 
 #1998 to 2019
-change_98_19_tidy <- change_87_98 %>% 
+change_98_19_tidy <- change_98_19 %>% 
     pivot_longer(!land_use:area_starting_year, names_to = "target",
                values_to = "change_98_19") %>% 
-  rename("1998" = area_starting_year)
+  rename("source" = land_use) %>% 
+  rename("total_1998" = area_starting_year)
+
+# Wrangle for alluvial plot
+#---------------------------------------
+change_full <- merge(change_87_98_tidy, change_98_19_tidy, by = c("source", "target"))
 
 # Join Time periods
-#---------------------------------------
-change_full <- merge(change_87_98_tidy, change_98_19_tidy, by = c("land_use", "target"))
+change_alluvial <- change_full %>% 
+  select(-c(total_1987,total_1998)) %>% 
+  pivot_longer(!source:target, names_to = "step", values_to = "area")
 
 ```
 
