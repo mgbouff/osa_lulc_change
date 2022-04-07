@@ -21,14 +21,32 @@ library(janitor)
 change_87_98 <- read.csv(here("Soroush", "data_whole_87_98.csv")) %>% 
   clean_names()
 
+# 1998 to 2019
+change_98_19 <- read.csv(here("Soroush", "data_whole_98_19.csv")) %>% 
+  clean_names()
+
 ```
 
 ```{r}
 
-# Wrangle change data to tidy
+# Tidy Change Data
+#---------------------------------------
+
+# 1987 to 1998
 change_87_98_tidy <- change_87_98 %>% 
   pivot_longer(!land_use:area_starting_year, names_to = "target",
-               values_to = "area")
+               values_to = "change_87_98") %>% 
+  rename("1987" = area_starting_year)
+
+#1998 to 2019
+change_98_19_tidy <- change_87_98 %>% 
+    pivot_longer(!land_use:area_starting_year, names_to = "target",
+               values_to = "change_98_19") %>% 
+  rename("1998" = area_starting_year)
+
+# Join Time periods
+#---------------------------------------
+change_full <- merge(change_87_98_tidy, change_98_19_tidy, by = c("land_use", "target"))
 
 ```
 
