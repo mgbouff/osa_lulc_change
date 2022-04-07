@@ -1,0 +1,9 @@
+Land Use,Area (starting year),Palm,Mangrove,Water,Grassland,Exposed soil / Urban,Primary Forest,Wetland,Teak / Melina
+Palm,18.18,0,0,0,0.9,0,17.1,0.18,0
+Mangrove,22.77,0,0,0,0.09,0,22.5,0.18,0
+Water,0.63,0,0,0,0,0,0.63,0,0
+Grassland,169.65,0,0,0,43.74,2.07,114.3,9.54,0
+Exposed soil / Urban,142.74,0,0,0,4.77,1.26,136.44,0.27,0
+Forest,1877.94,0,0.81,0,12.42,2.52,1844.46,17.73,0
+Wetland,0,0,0,0,0,0,0,0,0
+Teak / Melina,1.98,0,0,0,0,0,1.62,0.36,0

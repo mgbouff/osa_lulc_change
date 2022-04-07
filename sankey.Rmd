@@ -1,0 +1,34 @@
+---
+title: "Land Use/Land Cover Change"
+author: "Marie Bouffard"
+date: '2022-04-07'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load packages
+#---------------------------------------
+library(tidyverse)
+library(here)
+library(janitor)
+
+# Read in Data
+#---------------------------------------
+
+# 1987 to 1998
+change_87_98 <- read.csv(here("Soroush", "data_whole_87_98.csv")) %>% 
+  clean_names()
+
+```
+
+```{r}
+
+# Wrangle change data to tidy
+change_87_98_tidy <- change_87_98 %>% 
+  pivot_longer(!land_use:area_starting_year, names_to = "target",
+               values_to = "area")
+
+```
+
