@@ -13,16 +13,19 @@ knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(here)
 library(janitor)
+library(ggsankey)
+library(ggalluvial)
+library(networkD3)
 
 # Read in Data
 #---------------------------------------
 
 # 1987 to 1998
-change_87_98 <- read.csv(here("Soroush", "data_whole_87_98.csv")) %>% 
+lu_change_87_98 <- read.csv(here("Soroush", "data_whole_87_98.csv")) %>% 
   clean_names()
 
 # 1998 to 2019
-change_98_19 <- read.csv(here("Soroush", "data_whole_98_19.csv")) %>% 
+lu_change_98_19 <- read.csv(here("Soroush", "data_whole_98_19.csv")) %>% 
   clean_names()
 
 ```
@@ -32,27 +35,114 @@ change_98_19 <- read.csv(here("Soroush", "data_whole_98_19.csv")) %>%
 # Tidy Change Data for sankey plot
 #---------------------------------------
 # 1987 to 1998
-change_87_98_tidy <- change_87_98 %>% 
+change_87_98_tidy <- lu_change_87_98 %>% 
   pivot_longer(!land_use:area_starting_year, names_to = "target",
                values_to = "change_87_98") %>% 
   rename("source" = land_use) %>% 
-  rename("total_1987" = area_starting_year)
+  rename("total_1987" = area_starting_year) %>% 
+    mutate(source = case_when(
+    source == "Palm" ~ "Palm 1987",
+    source == "Mangrove" ~ "Mangrove 1987",
+    source == "Water" ~ "Water 1987",
+    source == "Grassland" ~ "Grassland 1987",
+    source == "Exposed soil / Urban" ~ "Exposed soil / Urban 1987",
+    source == "Forest" ~ "Forest 1987",
+    source == "Teak / Melina" ~ "Teak / Melina 1987",
+    source == "Wetland" ~ "Wetland 1987")) %>% 
+  mutate(target = case_when(
+    target == "palm" ~ "Palm 1998",
+    target == "mangrove" ~ "Mangrove 1998",
+    target == "water" ~ "Water 1998",
+    target == "grassland" ~ "Grassland 1998",
+    target == "exposed_soil_urban" ~ "Exposed soil / Urban 1998",
+    target == "primary_forest" ~ "Forest 1998",
+    target == "teak_melina" ~ "Teak / Melina 1998",
+    target == "wetland" ~ "Wetland 1998"))
+
+# write.csv(change_87_98_tidy,"change_87_98.csv")
 
 #1998 to 2019
-change_98_19_tidy <- change_98_19 %>% 
+change_98_19_tidy <- lu_change_98_19 %>% 
     pivot_longer(!land_use:area_starting_year, names_to = "target",
                values_to = "change_98_19") %>% 
   rename("source" = land_use) %>% 
   rename("total_1998" = area_starting_year)
 
+# write.csv(change_98_19_tidy,"change_98_19.csv")
+
 # Wrangle for alluvial plot
 #---------------------------------------
 change_full <- merge(change_87_98_tidy, change_98_19_tidy, by = c("source", "target"))
+
+# write.csv(change_full,"change_full.csv")
 
 # Join Time periods
 change_alluvial <- change_full %>% 
   select(-c(total_1987,total_1998)) %>% 
   pivot_longer(!source:target, names_to = "step", values_to = "area")
+
+# write.csv(change_alluvial,"change_alluvial.csv")
+
+```
+
+ggsankey (bust)
+```{r}
+# ggsankey
+
+# raw data
+change_87_98_long <- lu_change_87_98 %>% 
+  make_long(land_use, palm:teak_melina)
+
+# alluvial
+alluvial_long <- change_alluvial %>% 
+  make_long(source:area)
+
+# Plots ---------------------------------------------
+
+# raw
+ggplot(change_87_98_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(x))) +
+  geom_sankey()
+
+# alluvial
+ggplot(data = alluvial_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(x))) +
+  geom_sankey()
+
+```
+
+networkD3
+```{r}
+# A connection data frame is a list of flows with intensity for each flow
+links <- data.frame(
+  source= change_87_98_tidy$source,
+  target= change_87_98_tidy$target,
+  value= change_87_98_tidy$change_87_98
+  )
+
+# From these flows we need to create a node data frame: it lists every entities involved in the flow
+nodes <- data.frame(
+  name=c(as.character(links$source),
+  as.character(links$target)) %>% unique()
+)
+
+# With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
+links$IDsource <- match(links$source, nodes$name)-1
+links$IDtarget <- match(links$target, nodes$name)-1
+
+# Set colors for nodes
+my_color <- 'd3.scaleOrdinal() .domain(["Palm 1987", "Mangrove 1987","Water 1987", "Grassland 1987", "Exposed soil / Urban 1987","Forest 1987", "Wetland 1987", "Teak / Melina 1987", "Palm 1998", "Mangrove 1998","Water 1998", "Grassland 1998", "Exposed soil / Urban 1998","Forest 1998", "Wetland 1998", "Teak / Melina 1998"]) .range(["#ffff01", "#74ffdf" , "#0d5de6", "#e9ffbe", "#feebbe", "#287404", "#bed2ff", "#e60f03", "#ffff01", "#74ffdf" , "#0d5de6", "#e9ffbe", "#feebbe", "#287404", "#bed2ff", "#e60f03"])'
+
+# Make the Network
+sankeyNetwork(Links = links, Nodes = nodes,
+              Source = "IDsource", Target = "IDtarget",
+              Value = "value", NodeID = "name", colourScale=my_color)
 
 ```
 
