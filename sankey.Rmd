@@ -40,25 +40,7 @@ change_87_98_tidy <- lu_change_87_98 %>%
   pivot_longer(!land_use:area_starting_year, names_to = "target",
                values_to = "change_87_98") %>% 
   rename("source" = land_use) %>% 
-  rename("total_1987" = area_starting_year) %>% 
-    mutate(source = case_when(
-    source == "Palm" ~ "Palm 1987",
-    source == "Mangrove" ~ "Mangrove 1987",
-    source == "Water" ~ "Water 1987",
-    source == "Grassland" ~ "Grassland 1987",
-    source == "Exposed soil / Urban" ~ "Exposed soil / Urban 1987",
-    source == "Forest" ~ "Forest 1987",
-    source == "Teak / Melina" ~ "Teak / Melina 1987",
-    source == "Wetland" ~ "Wetland 1987")) %>% 
-  mutate(target = case_when(
-    target == "palm" ~ "Palm 1998",
-    target == "mangrove" ~ "Mangrove 1998",
-    target == "water" ~ "Water 1998",
-    target == "grassland" ~ "Grassland 1998",
-    target == "exposed_soil_urban" ~ "Exposed soil / Urban 1998",
-    target == "primary_forest" ~ "Forest 1998",
-    target == "teak_melina" ~ "Teak / Melina 1998",
-    target == "wetland" ~ "Wetland 1998"))
+  rename("total_1987" = area_starting_year)
 
 # write.csv(change_87_98_tidy,"change_87_98.csv")
 
@@ -67,25 +49,7 @@ change_98_19_tidy <- lu_change_98_19 %>%
     pivot_longer(!land_use:area_starting_year, names_to = "target",
                values_to = "change_98_19") %>% 
   rename("source" = land_use) %>% 
-  rename("total_1998" = area_starting_year) %>% 
-      mutate(source = case_when(
-    source == "Palm" ~ "Palm 1998",
-    source == "Mangrove" ~ "Mangrove 1998",
-    source == "Water" ~ "Water 1998",
-    source == "Grassland" ~ "Grassland 1998",
-    source == "Exposed soil / Urban" ~ "Exposed soil / Urban 1998",
-    source == "Forest" ~ "Forest 1998",
-    source == "Teak / Melina" ~ "Teak / Melina 1998",
-    source == "Wetland" ~ "Wetland 1998")) %>% 
-  mutate(target = case_when(
-    target == "palm" ~ "Palm 2019",
-    target == "mangrove" ~ "Mangrove 2019",
-    target == "water" ~ "Water 2019",
-    target == "grassland" ~ "Grassland 2019",
-    target == "exposed_soil_urban" ~ "Exposed soil / Urban 2019",
-    target == "primary_forest" ~ "Forest 2019",
-    target == "teak_melina" ~ "Teak / Melina 2019",
-    target == "wetland" ~ "Wetland 2019"))
+  rename("total_1998" = area_starting_year)
 
 # write.csv(change_98_19_tidy,"change_98_19.csv")
 
@@ -141,11 +105,32 @@ ggplot(change_87_98_long, aes(x = x,
 1989 to 1998
 
 ```{r}
+
+change_87_98_name <- change_87_98_tidy %>% 
+    mutate(source = case_when(
+    source == "Palm" ~ "Palm 1987",
+    source == "Mangrove" ~ "Mangrove 1987",
+    source == "Water" ~ "Water 1987",
+    source == "Grassland" ~ "Grassland 1987",
+    source == "Exposed soil / Urban" ~ "Exposed soil / Urban 1987",
+    source == "Forest" ~ "Forest 1987",
+    source == "Teak / Melina" ~ "Teak / Melina 1987",
+    source == "Wetland" ~ "Wetland 1987")) %>% 
+  mutate(target = case_when(
+    target == "palm" ~ "Palm 1998",
+    target == "mangrove" ~ "Mangrove 1998",
+    target == "water" ~ "Water 1998",
+    target == "grassland" ~ "Grassland 1998",
+    target == "exposed_soil_urban" ~ "Exposed soil / Urban 1998",
+    target == "primary_forest" ~ "Forest 1998",
+    target == "teak_melina" ~ "Teak / Melina 1998",
+    target == "wetland" ~ "Wetland 1998"))
+
 # A connection data frame is a list of flows with intensity for each flow
 links_87_98 <- data.frame(
-  source= change_87_98_tidy$source,
-  target= change_87_98_tidy$target,
-  value= change_87_98_tidy$change_87_98
+  source= change_87_98_name$source,
+  target= change_87_98_name$target,
+  value= change_87_98_name$change_87_98
   ) %>% 
   mutate(group = case_when(
     source == "Palm 1987" ~ "Palm",
@@ -204,11 +189,32 @@ htmlwidgets::onRender(plot_87_98, '
 1998 to 2019
 
 ```{r}
+
+change_98_19_name <- change_98_19_tidy %>%
+  mutate(source = case_when(
+    source == "Palm" ~ "Palm 1998",
+    source == "Mangrove" ~ "Mangrove 1998",
+    source == "Water" ~ "Water 1998",
+    source == "Grassland" ~ "Grassland 1998",
+    source == "Exposed soil / Urban" ~ "Exposed soil / Urban 1998",
+    source == "Forest" ~ "Forest 1998",
+    source == "Teak / Melina" ~ "Teak / Melina 1998",
+    source == "Wetland" ~ "Wetland 1998")) %>% 
+  mutate(target = case_when(
+    target == "palm" ~ "Palm 2019",
+    target == "mangrove" ~ "Mangrove 2019",
+    target == "water" ~ "Water 2019",
+    target == "grassland" ~ "Grassland 2019",
+    target == "exposed_soil_urban" ~ "Exposed soil / Urban 2019",
+    target == "primary_forest" ~ "Forest 2019",
+    target == "teak_melina" ~ "Teak / Melina 2019",
+    target == "wetland" ~ "Wetland 2019"))
+
 # A connection data frame is a list of flows with intensity for each flow
 links_98_19 <- data.frame(
-  source= change_98_19_tidy$source,
-  target= change_98_19_tidy$target,
-  value= change_98_19_tidy$change_98_19
+  source= change_98_19_name$source,
+  target= change_98_19_name$target,
+  value= change_98_19_name$change_98_19
   ) %>% 
   mutate(group = case_when(
     source == "Palm 1998" ~ "Palm",
@@ -264,3 +270,17 @@ htmlwidgets::onRender(plot_98_19, '
 ')
 
 ```
+
+Combined
+
+```{r}
+
+# Links
+# links_combined <- data.frame(
+#   source= change_98_19_tidy$source,
+#   target= change_98_19_tidy$target,
+#   value= change_98_19_tidy$change_98_19
+#   )
+
+```
+
