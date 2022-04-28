@@ -67,7 +67,25 @@ change_98_19_tidy <- lu_change_98_19 %>%
     pivot_longer(!land_use:area_starting_year, names_to = "target",
                values_to = "change_98_19") %>% 
   rename("source" = land_use) %>% 
-  rename("total_1998" = area_starting_year)
+  rename("total_1998" = area_starting_year) %>% 
+      mutate(source = case_when(
+    source == "Palm" ~ "Palm 1998",
+    source == "Mangrove" ~ "Mangrove 1998",
+    source == "Water" ~ "Water 1998",
+    source == "Grassland" ~ "Grassland 1998",
+    source == "Exposed soil / Urban" ~ "Exposed soil / Urban 1998",
+    source == "Forest" ~ "Forest 1998",
+    source == "Teak / Melina" ~ "Teak / Melina 1998",
+    source == "Wetland" ~ "Wetland 1998")) %>% 
+  mutate(target = case_when(
+    target == "palm" ~ "Palm 2019",
+    target == "mangrove" ~ "Mangrove 2019",
+    target == "water" ~ "Water 2019",
+    target == "grassland" ~ "Grassland 2019",
+    target == "exposed_soil_urban" ~ "Exposed soil / Urban 2019",
+    target == "primary_forest" ~ "Forest 2019",
+    target == "teak_melina" ~ "Teak / Melina 2019",
+    target == "wetland" ~ "Wetland 2019"))
 
 # write.csv(change_98_19_tidy,"change_98_19.csv")
 
@@ -118,10 +136,13 @@ ggplot(change_87_98_long, aes(x = x,
 
 ```
 
-networkD3
+### networkD3
+
+1989 to 1998
+
 ```{r}
 # A connection data frame is a list of flows with intensity for each flow
-links <- data.frame(
+links_87_98 <- data.frame(
   source= change_87_98_tidy$source,
   target= change_87_98_tidy$target,
   value= change_87_98_tidy$change_87_98
@@ -138,20 +159,20 @@ links <- data.frame(
   ))
 
 # From these flows we need to create a node data frame: it lists every entities involved in the flow
-nodes <- data.frame(
+nodes_87_98 <- data.frame(
   name=c(as.character(links$source),
   as.character(links$target)) %>% unique()
 ) %>% 
   mutate(group = as.factor(c("Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak", "Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak")))
 
 # With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
-links$IDsource <- match(links$source, nodes$name)-1
-links$IDtarget <- match(links$target, nodes$name)-1
+links_87_98$IDsource <- match(links$source, nodes$name)-1
+links_87_98$IDtarget <- match(links$target, nodes$name)-1
 
 class_color <- 'd3.scaleOrdinal() .domain(["Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak"]) .range(["#ffff01", "#74ffdf" , "#0d5de6", "#e9ffbe", "#feebbe", "#287404", "#bed2ff", "#e60f03"])'
 
 # Make the Network
-plot_87_98 <- sankeyNetwork(Links = links, Nodes = nodes,
+plot_87_98 <- sankeyNetwork(Links = links_87_98, Nodes = nodes_87_98,
               Source = "IDsource", 
               Target = "IDtarget",
               Value = "value", 
@@ -162,20 +183,84 @@ plot_87_98 <- sankeyNetwork(Links = links, Nodes = nodes,
               fontSize = 12,
               sinksRight = FALSE)
 
-htmlwidgets::onRender(plot_87_98, '
-                      function(el) {
-                        var cols_x = this.sankey.nodes().map(d => d.x).filter((v, i, a) => a.indexOf(v) === i).sort(function(a, b){return a - b});
-                        cols_x.forEach((d, i)) => {
-                          d3.select(el).select("svg")
-                          .append("text")
-                          .attr("x", d)
-                          .attr("y", 12)
-                          .text("Step " + (i + 1));
-                        }
-                      }
-                     ' )
-
 plot_87_98
+
+htmlwidgets::onRender(plot_87_98, '
+  function(el) { 
+    var cols_x = this.sankey.nodes().map(d => d.x).filter((v, i, a) => a.indexOf(v) === i).sort(function(a, b){return a - b});
+    var labels = ["1987", "1998"];
+    cols_x.forEach((d, i) => {
+      d3.select(el).select("svg")
+        .append("text")
+        .attr("x", d)
+        .attr("y", 12)
+        .text(labels[i]);
+    })
+  }
+')
 
 ```
 
+1998 to 2019
+
+```{r}
+# A connection data frame is a list of flows with intensity for each flow
+links_98_19 <- data.frame(
+  source= change_98_19_tidy$source,
+  target= change_98_19_tidy$target,
+  value= change_98_19_tidy$change_98_19
+  ) %>% 
+  mutate(group = case_when(
+    source == "Palm 1998" ~ "Palm",
+    source == "Mangrove 1998" ~ "Mangrove",
+    source == "Water 1998" ~ "Water",
+    source == "Grassland 1998" ~ "Grassland",
+    source == "Exposed soil / Urban 1998" ~ "Soil",
+    source == "Forest 1998" ~ "Forest",
+    source == "Wetland 1998" ~ "Wetland",
+    source == "Teak / Melina 1998" ~ "Teak"
+  ))
+
+
+# From these flows we need to create a node data frame: it lists every entities involved in the flow
+nodes_98_19 <- data.frame(
+  name=c(as.character(links$source),
+  as.character(links$target)) %>% unique()
+) %>% 
+  mutate(group = as.factor(c("Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak", "Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak")))
+
+# With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
+links_98_19$IDsource <- match(links$source, nodes$name)-1
+links_98_19$IDtarget <- match(links$target, nodes$name)-1
+
+class_color <- 'd3.scaleOrdinal() .domain(["Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak"]) .range(["#ffff01", "#74ffdf" , "#0d5de6", "#e9ffbe", "#feebbe", "#287404", "#bed2ff", "#e60f03"])'
+
+# Make the Network
+plot_98_19 <- sankeyNetwork(Links = links_98_19, Nodes = nodes_98_19,
+              Source = "IDsource", 
+              Target = "IDtarget",
+              Value = "value", 
+              NodeID = "name", 
+              colourScale = class_color, 
+              LinkGroup = "group",  
+              NodeGroup = "group",
+              fontSize = 12,
+              sinksRight = FALSE)
+
+plot_98_19
+
+htmlwidgets::onRender(plot_98_19, '
+  function(el) { 
+    var cols_x = this.sankey.nodes().map(d => d.x).filter((v, i, a) => a.indexOf(v) === i).sort(function(a, b){return a - b});
+    var labels = ["1998", "2019"];
+    cols_x.forEach((d, i) => {
+      d3.select(el).select("svg")
+        .append("text")
+        .attr("x", d)
+        .attr("y", 12)
+        .text(labels[i]);
+    })
+  }
+')
+
+```
