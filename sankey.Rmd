@@ -16,6 +16,7 @@ library(janitor)
 library(ggsankey)
 library(ggalluvial)
 library(networkD3)
+library(htmlwidgets)
 
 # Read in Data
 #---------------------------------------
@@ -108,12 +109,12 @@ ggplot(change_87_98_long, aes(x = x,
   geom_sankey()
 
 # alluvial
-ggplot(data = alluvial_long, aes(x = x, 
-               next_x = next_x, 
-               node = node, 
-               next_node = next_node,
-               fill = factor(x))) +
-  geom_sankey()
+# ggplot(data = alluvial_long, aes(x = x, 
+#                next_x = next_x, 
+#                node = node, 
+#                next_node = next_node,
+#                fill = factor(x))) +
+#   geom_sankey()
 
 ```
 
@@ -150,14 +151,31 @@ links$IDtarget <- match(links$target, nodes$name)-1
 class_color <- 'd3.scaleOrdinal() .domain(["Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak"]) .range(["#ffff01", "#74ffdf" , "#0d5de6", "#e9ffbe", "#feebbe", "#287404", "#bed2ff", "#e60f03"])'
 
 # Make the Network
-sankeyNetwork(Links = links, Nodes = nodes,
+plot_87_98 <- sankeyNetwork(Links = links, Nodes = nodes,
               Source = "IDsource", 
               Target = "IDtarget",
               Value = "value", 
               NodeID = "name", 
               colourScale = class_color, 
               LinkGroup = "group",  
-              NodeGroup = "group")
+              NodeGroup = "group",
+              fontSize = 12,
+              sinksRight = FALSE)
+
+htmlwidgets::onRender(plot_87_98, '
+                      function(el) {
+                        var cols_x = this.sankey.nodes().map(d => d.x).filter((v, i, a) => a.indexOf(v) === i).sort(function(a, b){return a - b});
+                        cols_x.forEach((d, i)) => {
+                          d3.select(el).select("svg")
+                          .append("text")
+                          .attr("x", d)
+                          .attr("y", 12)
+                          .text("Step " + (i + 1));
+                        }
+                      }
+                     ' )
+
+plot_87_98
 
 ```
 
