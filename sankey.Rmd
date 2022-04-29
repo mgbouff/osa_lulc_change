@@ -125,7 +125,8 @@ change_87_98_name <- change_87_98_tidy %>%
     target == "exposed_soil_urban" ~ "Exposed soil / Urban 1998",
     target == "primary_forest" ~ "Forest 1998",
     target == "teak_melina" ~ "Teak / Melina 1998",
-    target == "wetland" ~ "Wetland 1998"))
+    target == "wetland" ~ "Wetland 1998")) %>% 
+  select(source, target, change_87_98)
 
 # A connection data frame is a list of flows with intensity for each flow
 links_87_98 <- data.frame(
@@ -209,7 +210,8 @@ change_98_19_name <- change_98_19_tidy %>%
     target == "exposed_soil_urban" ~ "Exposed soil / Urban 2019",
     target == "primary_forest" ~ "Forest 2019",
     target == "teak_melina" ~ "Teak / Melina 2019",
-    target == "wetland" ~ "Wetland 2019"))
+    target == "wetland" ~ "Wetland 2019")) %>% 
+  select(source, target, change_98_19)
 
 # A connection data frame is a list of flows with intensity for each flow
 links_98_19 <- data.frame(
@@ -276,12 +278,42 @@ Combined
 
 ```{r}
 
+# full_sankey <- change_full %>% 
+#   pivot_longer(!source:target, names_to = "step", values_to = "change")
+
+sankey_full <- merge(change_87_98_name, change_98_19_name, by = c("source", "target"))
+
 # Links
-# links_combined <- data.frame(
-#   source= change_98_19_tidy$source,
-#   target= change_98_19_tidy$target,
-#   value= change_98_19_tidy$change_98_19
-#   )
+links_combined <- data.frame(
+  source= full_sankey$source,
+  target= full_sankey$target,
+  value= full_sankey$change
+  )
+
+# Nodes
+nodes_combined <- data.frame(
+  name=c(as.character(links_combined$source),
+  as.character(links_combined$target)) %>% unique()
+) 
+  # mutate(group = as.factor(c("Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak", "Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak")))
+
+# Format Link IDS
+links_combined$IDsource <- match(links_combined$source, nodes_combined$name)-1
+links_combined$IDtarget <- match(links_combined$target, nodes_combined$name)-1
+
+# Make the Network
+plot_combined <- sankeyNetwork(Links = links_combined, Nodes = nodes_combined,
+              Source = "IDsource", 
+              Target = "IDtarget",
+              Value = "value", 
+              NodeID = "name", 
+#              colourScale = class_color, 
+#              LinkGroup = "group",  
+#              NodeGroup = "group",
+              fontSize = 12,
+              sinksRight = FALSE)
+
+plot_combined
 
 ```
 
