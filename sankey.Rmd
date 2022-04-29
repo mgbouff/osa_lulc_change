@@ -55,7 +55,8 @@ change_98_19_tidy <- lu_change_98_19 %>%
 
 # Wrangle for alluvial plot
 #---------------------------------------
-change_full <- merge(change_87_98_tidy, change_98_19_tidy, by = c("source", "target"))
+change_full <- merge(change_87_98_tidy, change_98_19_tidy, by = c("source", "target")) %>% 
+  select(source, target, change_87_98, change_98_19)
 
 # write.csv(change_full,"change_full.csv")
 
@@ -145,14 +146,14 @@ links_87_98 <- data.frame(
 
 # From these flows we need to create a node data frame: it lists every entities involved in the flow
 nodes_87_98 <- data.frame(
-  name=c(as.character(links$source),
-  as.character(links$target)) %>% unique()
+  name=c(as.character(links_87_98$source),
+  as.character(links_87_98$target)) %>% unique()
 ) %>% 
   mutate(group = as.factor(c("Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak", "Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak")))
 
 # With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
-links_87_98$IDsource <- match(links$source, nodes$name)-1
-links_87_98$IDtarget <- match(links$target, nodes$name)-1
+links_87_98$IDsource <- match(links_87_98$source, nodes_87_98$name)-1
+links_87_98$IDtarget <- match(links_87_98$target, nodes_87_98$name)-1
 
 class_color <- 'd3.scaleOrdinal() .domain(["Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak"]) .range(["#ffff01", "#74ffdf" , "#0d5de6", "#e9ffbe", "#feebbe", "#287404", "#bed2ff", "#e60f03"])'
 
@@ -230,14 +231,14 @@ links_98_19 <- data.frame(
 
 # From these flows we need to create a node data frame: it lists every entities involved in the flow
 nodes_98_19 <- data.frame(
-  name=c(as.character(links$source),
-  as.character(links$target)) %>% unique()
+  name=c(as.character(links_98_19$source),
+  as.character(links_98_19$target)) %>% unique()
 ) %>% 
   mutate(group = as.factor(c("Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak", "Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak")))
 
 # With networkD3, connection must be provided using id, not using real name like in the links dataframe.. So we need to reformat it.
-links_98_19$IDsource <- match(links$source, nodes$name)-1
-links_98_19$IDtarget <- match(links$target, nodes$name)-1
+links_98_19$IDsource <- match(links_98_19$source, nodes_98_19$name)-1
+links_98_19$IDtarget <- match(links_98_19$target, nodes_98_19$name)-1
 
 class_color <- 'd3.scaleOrdinal() .domain(["Palm", "Mangrove", "Water", "Grassland", "Soil", "Forest", "Wetland", "Teak"]) .range(["#ffff01", "#74ffdf" , "#0d5de6", "#e9ffbe", "#feebbe", "#287404", "#bed2ff", "#e60f03"])'
 
