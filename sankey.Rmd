@@ -112,15 +112,15 @@ ggsankey
 
 # 1987 to 1998
 uncount_87_98 <- change_87_98_tidy %>%
-  mutate(change_87_98_integer = change_87_98*100) %>% 
+  mutate(change_87_98_integer = round(change, digits = 0)) %>% 
   mutate(change_87_98_integer = as.integer(change_87_98_integer)) %>% 
   uncount(change_87_98_integer)
 
 # 1998 to 1998
-uncount_98_19 <- change_98_19_tidy %>%
-  mutate(change_98_19_integer = change_98_19*100) %>% 
-  mutate(change_98_19_integer = as.integer(change_98_19_integer)) %>% 
-  uncount(change_98_19_integer)
+# uncount_98_19 <- change_98_19_tidy %>%
+#   mutate(change_98_19_integer = change_98_19*100) %>% 
+#   mutate(change_98_19_integer = as.integer(change_98_19_integer)) %>% 
+#   uncount(change_98_19_integer)
 
 # Make long
 #---------------------------------------
@@ -133,7 +133,12 @@ change_87_98_long <- lu_change_87_98 %>%
 long_87_98 <- uncount_87_98 %>% 
   make_long(source:target)
 
-# Plots
+```
+
+```{r}
+
+#---------------------------------------
+# ggsankey plots
 #---------------------------------------
 
 # raw
@@ -145,15 +150,16 @@ ggplot(change_87_98_long, aes(x = x,
   geom_sankey()
 
 # 1987 to 1998
-ggplot(long_87_98, aes(
-  aes(x = x, 
+ggplot(long_87_98, aes(x = x, 
                next_x = next_x, 
                node = node, 
                next_node = next_node,
-               fill = factor(x)))) +
-    ggsankey()
+               fill = factor(x))) +
+  geom_sankey()
+
 
 ```
+
 
 ### networkD3
 
