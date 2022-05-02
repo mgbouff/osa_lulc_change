@@ -117,10 +117,10 @@ uncount_87_98 <- change_87_98_tidy %>%
   uncount(change_87_98_integer)
 
 # 1998 to 1998
-# uncount_98_19 <- change_98_19_tidy %>%
-#   mutate(change_98_19_integer = change_98_19*100) %>% 
-#   mutate(change_98_19_integer = as.integer(change_98_19_integer)) %>% 
-#   uncount(change_98_19_integer)
+uncount_98_19 <- change_98_19_tidy %>%
+  mutate(change_98_19_integer = round(change, digits = 0)) %>%
+  mutate(change_98_19_integer = as.integer(change_98_19_integer)) %>%
+  uncount(change_98_19_integer)
 
 # Make long
 #---------------------------------------
@@ -129,9 +129,33 @@ uncount_87_98 <- change_87_98_tidy %>%
 change_87_98_long <- lu_change_87_98 %>% 
   make_long(land_use, palm:teak_melina)
 
-# 98 98 Long
+# 87 98 Long
 long_87_98 <- uncount_87_98 %>% 
-  make_long(source:target)
+  make_long(source:target) %>% 
+  mutate(group = case_when(
+    node == "Palm 1987" ~ "Palm",
+    node == "Mangrove 1987" ~ "Mangrove",
+    node == "Water 1987" ~ "Water",
+    node == "Grassland 1987" ~ "Grassland",
+    node == "Exposed soil / Urban 1987" ~ "Soil",
+    node == "Forest 1987" ~ "Forest",
+    node == "Wetland 1987" ~ "Wetland",
+    node == "Teak / Melina 1987" ~ "Teak"
+  ))
+
+# 98 21 Long
+long_98_19 <- uncount_98_19 %>% 
+  make_long(source:target) %>% 
+  mutate(group = case_when(
+    node == "Palm 1998" ~ "Palm",
+    node == "Mangrove 1998" ~ "Mangrove",
+    node == "Water 1998" ~ "Water",
+    node == "Grassland 1998" ~ "Grassland",
+    node == "Exposed soil / Urban 1998" ~ "Exposed Soil/Urban",
+    node == "Forest 1998" ~ "Forest",
+    node == "Wetland 1998" ~ "Wetland",
+    node == "Teak / Melina 1998" ~ "Teak/Melina"
+  ))
 
 ```
 
@@ -154,9 +178,16 @@ ggplot(long_87_98, aes(x = x,
                next_x = next_x, 
                node = node, 
                next_node = next_node,
-               fill = factor(x))) +
+               fill = factor(group))) +
   geom_sankey()
 
+# 1998 to 2019
+ggplot(long_98_19, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(group))) +
+  geom_sankey()
 
 ```
 
