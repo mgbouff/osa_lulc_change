@@ -100,6 +100,8 @@ uncount_98_19 <- sankey_98_19 %>%
   mutate(change = round(change, digits = 0)) %>% 
   uncount(change)
 
+# uncount_combine <- full_join(uncount_87_98, uncount_98_19, by = "lu_1998")
+
 # Make long
 #---------------------------------------
 
@@ -111,15 +113,28 @@ long_87_98 <- uncount_87_98 %>%
 long_98_19 <- uncount_98_19 %>% 
   make_long(lu_1998:lu_2019)
 
-
 # Combine
 #---------------------------------------
-sankey_full <- full_join(uncount_87_98, uncount_98_19)
+long_combined <- rbind(long_87_98, long_98_19) # I think it is double counting 1998
+
+
 
 ```
 
 
 ```{r}
+
+# Pallets
+#---------------------------------------
+class_pallete <- c("#feebbe", # Exposed Soil
+                   "#287404", # Forest
+                   "#e9ffbe", # Grassland
+                   "#74ffdf", # Mangrove
+                   "#ffff01", # Palm
+                   "#e60f03", # Teak
+                   "#0d5de6", # Water
+                   "#bed2ff" # Wetland
+                   )
 
 #---------------------------------------
 # ggsankey plots
@@ -131,10 +146,40 @@ ggplot(long_87_98, aes(x = x,
                node = node, 
                next_node = next_node,
                fill = factor(node))) +
-  geom_sankey()
+  geom_sankey() +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank()
+  )
 
 # 1998 to 2019
 ggplot(long_98_19, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey() +
+  scale_x_discrete(labels = c("lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank()
+  )
+
+# Combined
+ggplot(long_combined, aes(x = x, 
                next_x = next_x, 
                node = node, 
                next_node = next_node,
