@@ -32,12 +32,132 @@ lu_change_98_19 <- read.csv(here("Soroush", "data_whole_98_19.csv")) %>%
 # Tidy Change Data
 #---------------------------------------
 # 1987 to 1998
-change_87_98_tidy <- lu_change_87_98 %>% 
+tidy_87_98 <- lu_change_87_98 %>% 
+  pivot_longer(!land_use:area_starting_year, names_to = "target",
+               values_to = "change") %>% 
+  rename("source" = land_use) %>% 
+  mutate(target = case_when(
+    target == "palm" ~ "Palm",
+    target == "mangrove" ~ "Mangrove",
+    target == "water" ~ "Water",
+    target == "grassland" ~ "Grassland",
+    target == "exposed_soil_urban" ~ "Exposed soil / Urban",
+    target == "primary_forest" ~ "Forest",
+    target == "teak_melina" ~ "Teak / Melina",
+    target == "wetland" ~ "Wetland")) %>% 
+  select(source, target, change)
+
+# write.csv(change_87_98_tidy,"change_87_98.csv")
+
+#1998 to 2019
+tidy_98_19 <- lu_change_98_19 %>% 
+    pivot_longer(!land_use:area_starting_year, names_to = "target",
+               values_to = "change") %>% 
+  rename("source" = land_use) %>% 
+  mutate(target = case_when(
+    target == "palm" ~ "Palm",
+    target == "mangrove" ~ "Mangrove",
+    target == "water" ~ "Water",
+    target == "grassland" ~ "Grassland",
+    target == "exposed_soil_urban" ~ "Exposed soil / Urban",
+    target == "primary_forest" ~ "Forest",
+    target == "teak_melina" ~ "Teak / Melina",
+    target == "wetland" ~ "Wetland")) %>% 
+    select(source, target, change) 
+
+# write.csv(change_98_19_tidy,"change_98_19.csv")
+
+```
+
+ggsankey
+
+```{r, cache = TRUE}
+
+#---------------------------------------
+# Format for ggsankey
+#---------------------------------------
+
+# 1987 to 1998
+sankey_87_98 <- tidy_87_98 %>% 
+  rename("lu_1987" = source) %>% 
+  rename("lu_1998" = target)
+
+# 1998 to 2019
+sankey_98_19 <- tidy_98_19 %>% 
+  rename("lu_1998" = source) %>% 
+  rename("lu_2019" = target)
+
+# Uncount
+#---------------------------------------
+
+# 1987 to 1998
+uncount_87_98 <- sankey_87_98 %>%
+  mutate(change = round(change, digits = 0)) %>% 
+  uncount(change)
+
+# 1998 to 1998
+uncount_98_19 <- sankey_98_19 %>%
+  mutate(change = round(change, digits = 0)) %>% 
+  uncount(change)
+
+# Make long
+#---------------------------------------
+
+# 1987 to 1998
+long_87_98 <- uncount_87_98 %>% 
+  make_long(lu_1987:lu_1998)
+
+#1998 to 2019
+long_98_19 <- uncount_98_19 %>% 
+  make_long(lu_1998:lu_2019)
+
+
+# Combine
+#---------------------------------------
+sankey_full <- full_join(uncount_87_98, uncount_98_19)
+
+```
+
+
+```{r}
+
+#---------------------------------------
+# ggsankey plots
+#---------------------------------------
+
+# 1987 to 1998
+ggplot(long_87_98, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey()
+
+# 1998 to 2019
+ggplot(long_98_19, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey()
+
+```
+
+
+### networkD3
+
+```{r}
+#---------------------------------------
+# Format data for networkD3
+#---------------------------------------
+
+# 1987 to 1998
+change_87_98_d3 <- lu_change_87_98 %>% 
   pivot_longer(!land_use:area_starting_year, names_to = "target",
                values_to = "change") %>% 
   rename("source" = land_use) %>% 
   # select(source, target, change) %>% 
-      mutate(source = case_when(
+    mutate(source = case_when(
     source == "Palm" ~ "Palm 1987",
     source == "Mangrove" ~ "Mangrove 1987",
     source == "Water" ~ "Water 1987",
@@ -57,12 +177,10 @@ change_87_98_tidy <- lu_change_87_98 %>%
     target == "wetland" ~ "Wetland 1998")) %>% 
   select(source, target, change)
 
-change_87_98_tidy$step <- "1987 to 1998"
-
 # write.csv(change_87_98_tidy,"change_87_98.csv")
 
 #1998 to 2019
-change_98_19_tidy <- lu_change_98_19 %>% 
+change_98_19_d3 <- lu_change_98_19 %>% 
     pivot_longer(!land_use:area_starting_year, names_to = "target",
                values_to = "change") %>% 
   rename("source" = land_use) %>% 
@@ -86,123 +204,21 @@ change_98_19_tidy <- lu_change_98_19 %>%
     target == "wetland" ~ "Wetland 2019")) %>% 
     select(source, target, change) 
 
-change_98_19_tidy$step <- "1998 to 2019"
-
-# write.csv(change_98_19_tidy,"change_98_19.csv")
-
-# Combine dfs
-#---------------------------------------
-change_full <- bind_rows(change_87_98_tidy, change_98_19_tidy) %>% 
-  select(source, target, step, change)
-
-# write.csv(change_full,"change_full.csv")
-
-```
-
-ggsankey
-
-```{r, cache = TRUE}
-
-#---------------------------------------
-# Format for ggsankey
-#---------------------------------------
-
-# Uncount
-#---------------------------------------
-
-# 1987 to 1998
-uncount_87_98 <- change_87_98_tidy %>%
-  mutate(change_87_98_integer = round(change, digits = 0)) %>% 
-  mutate(change_87_98_integer = as.integer(change_87_98_integer)) %>% 
-  uncount(change_87_98_integer)
-
-# 1998 to 1998
-uncount_98_19 <- change_98_19_tidy %>%
-  mutate(change_98_19_integer = round(change, digits = 0)) %>%
-  mutate(change_98_19_integer = as.integer(change_98_19_integer)) %>%
-  uncount(change_98_19_integer)
-
-# Make long
-#---------------------------------------
-
-# raw data
-change_87_98_long <- lu_change_87_98 %>% 
-  make_long(land_use, palm:teak_melina)
-
-# 87 98 Long
-long_87_98 <- uncount_87_98 %>% 
-  make_long(source:target) %>% 
-  mutate(group = case_when(
-    node == "Palm 1987" ~ "Palm",
-    node == "Mangrove 1987" ~ "Mangrove",
-    node == "Water 1987" ~ "Water",
-    node == "Grassland 1987" ~ "Grassland",
-    node == "Exposed soil / Urban 1987" ~ "Soil",
-    node == "Forest 1987" ~ "Forest",
-    node == "Wetland 1987" ~ "Wetland",
-    node == "Teak / Melina 1987" ~ "Teak"
-  ))
-
-# 98 21 Long
-long_98_19 <- uncount_98_19 %>% 
-  make_long(source:target) %>% 
-  mutate(group = case_when(
-    node == "Palm 1998" ~ "Palm",
-    node == "Mangrove 1998" ~ "Mangrove",
-    node == "Water 1998" ~ "Water",
-    node == "Grassland 1998" ~ "Grassland",
-    node == "Exposed soil / Urban 1998" ~ "Exposed Soil/Urban",
-    node == "Forest 1998" ~ "Forest",
-    node == "Wetland 1998" ~ "Wetland",
-    node == "Teak / Melina 1998" ~ "Teak/Melina"
-  ))
-
-```
-
-```{r}
-
-#---------------------------------------
-# ggsankey plots
-#---------------------------------------
-
-# raw
-ggplot(change_87_98_long, aes(x = x, 
-               next_x = next_x, 
-               node = node, 
-               next_node = next_node,
-               fill = factor(x))) +
-  geom_sankey()
-
-# 1987 to 1998
-ggplot(long_87_98, aes(x = x, 
-               next_x = next_x, 
-               node = node, 
-               next_node = next_node,
-               fill = factor(group))) +
-  geom_sankey()
-
-# 1998 to 2019
-ggplot(long_98_19, aes(x = x, 
-               next_x = next_x, 
-               node = node, 
-               next_node = next_node,
-               fill = factor(group))) +
-  geom_sankey()
-
+# Combined
+combined_d3 <- bind_rows(change_87_98_d3, change_98_19_d3) %>% 
+  select(source, target, change)
 ```
 
 
-### networkD3
-
-1989 to 1998
+1987 to 1998
 
 ```{r}
 
 # A connection data frame is a list of flows with intensity for each flow
 links_87_98 <- data.frame(
-  source= change_87_98_tidy$source,
-  target= change_87_98_tidy$target,
-  value= change_87_98_tidy$change_87_98
+  source= change_87_98_d3$source,
+  target= change_87_98_d3$target,
+  value= change_87_98_d3$change
   ) %>% 
   mutate(group = case_when(
     source == "Palm 1987" ~ "Palm",
@@ -264,9 +280,9 @@ htmlwidgets::onRender(plot_87_98, '
 
 # A connection data frame is a list of flows with intensity for each flow
 links_98_19 <- data.frame(
-  source= change_98_19_tidy$source,
-  target= change_98_19_tidy$target,
-  value= change_98_19_tidy$change_98_19
+  source= change_98_19_d3$source,
+  target= change_98_19_d3$target,
+  value= change_98_19_d3$change
   ) %>% 
   mutate(group = case_when(
     source == "Palm 1998" ~ "Palm",
@@ -328,9 +344,9 @@ Combined
 
 # Links
 links_combined <- data.frame(
-  source= change_full$source,
-  target= change_full$target,
-  value= change_full$change
+  source= combined_d3$source,
+  target= combined_d3$target,
+  value= combined_d3$change
   ) %>% 
   mutate(group = case_when(
     source == "Palm 1987" ~ "Palm",
