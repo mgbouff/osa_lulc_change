@@ -6,7 +6,8 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.path = "graph/")
 
 # Load packages
 #---------------------------------------
@@ -17,6 +18,7 @@ library(ggsankey)
 library(ggalluvial)
 library(networkD3)
 library(htmlwidgets)
+library(webshot)
 
 # Read in Data
 #---------------------------------------
@@ -189,19 +191,19 @@ ggplot(long_98_19, aes(x = x,
   )
 
 # Combined
-ggplot(long_combine, aes(x = x, 
+sankey_combine_plot <- ggplot(long_combine, aes(x = x, 
                next_x = next_x, 
                node = node, 
                next_node = next_node,
                fill = factor(node))) +
-  geom_sankey() +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
   scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
   theme(
     legend.position = "bottom",
     legend.title = element_blank(),
-    axis.text.x = element_text(size = 12),
+    axis.text.x = element_text(size = 14, face = "bold"),
     axis.title.x = element_blank(),
     axis.text.y = element_blank(),
     panel.grid.minor = element_blank(), 
@@ -211,7 +213,8 @@ ggplot(long_combine, aes(x = x,
     rect = element_rect(fill = "white", color = NA)
   )
 
-ggsave("combined_sankey.jpeg", width = 8, height = 7)
+# Save
+ggsave(here("Images", "combined_sankey.jpeg"), sankey_combine_plot, width = 8, height = 7)
 
 ```
 
@@ -279,6 +282,7 @@ change_98_19_d3 <- lu_change_98_19 %>%
 # Combined
 combined_d3 <- bind_rows(change_87_98_d3, change_98_19_d3) %>% 
   select(source, target, change)
+
 ```
 
 
@@ -412,7 +416,7 @@ htmlwidgets::onRender(plot_98_19, '
 
 Combined
 
-```{r}
+```{r, fig.align='center'}
 
 # Links
 links_combined <- data.frame(
@@ -453,7 +457,7 @@ links_combined$IDsource <- match(links_combined$source, nodes_combined$name)-1
 links_combined$IDtarget <- match(links_combined$target, nodes_combined$name)-1
 
 # Make the Network
-plot_combined <- sankeyNetwork(Links = links_combined, Nodes = nodes_combined,
+d3_combined_plot <- sankeyNetwork(Links = links_combined, Nodes = nodes_combined,
               Source = "IDsource", 
               Target = "IDtarget",
               Value = "value", 
@@ -464,7 +468,7 @@ plot_combined <- sankeyNetwork(Links = links_combined, Nodes = nodes_combined,
              fontSize = 12,
              sinksRight = FALSE)
 
-plot_combined
+d3_combined_plot
 
 htmlwidgets::onRender(plot_combined, '
   function(el) { 
@@ -479,6 +483,17 @@ htmlwidgets::onRender(plot_combined, '
     })
   }
 ')
+
+# Save image
+URL <- paste0('https://cdn.rawgit.com/christophergandrud/networkD3/',
+              'master/JSONdata/energy.json')
+energy <- jsonlite::fromJSON(URL)
+
+# Save as an html
+saveNetwork(d3_combined_plot, "d3_combined_plot.html")
+
+# Convert to png
+webshot("d3_combined_plot.html","sankey_d3.png", vwidth = 1000, vheight = 900)
 
 ```
 
