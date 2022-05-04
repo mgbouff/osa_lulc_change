@@ -100,8 +100,6 @@ uncount_98_19 <- sankey_98_19 %>%
   mutate(change = round(change, digits = 0)) %>% 
   uncount(change)
 
-# uncount_combine <- full_join(uncount_87_98, uncount_98_19, by = "lu_1998")
-
 # Make long
 #---------------------------------------
 
@@ -109,15 +107,27 @@ uncount_98_19 <- sankey_98_19 %>%
 long_87_98 <- uncount_87_98 %>% 
   make_long(lu_1987:lu_1998)
 
-#1998 to 2019
+# 1998 to 2019
 long_98_19 <- uncount_98_19 %>% 
   make_long(lu_1998:lu_2019)
 
 # Combine
 #---------------------------------------
-long_combined <- rbind(long_87_98, long_98_19) # I think it is double counting 1998
 
+# Combine uncounted datasets
 
+# File too big
+# uncount_combine <- full_join(uncount_87_98, uncount_98_19, by = "lu_1998")
+
+# Export to run combiner.exe since its too big for full_join
+# write.csv(uncount_87_98,"set1.csv")
+# write.csv(uncount_98_19,"set2.csv")
+
+sankey_combined <- read.csv("combinedSet.csv")
+
+# Make Long
+long_combine <- sankey_combined %>% 
+  make_long(lu_1987:lu_2019)
 
 ```
 
@@ -179,12 +189,29 @@ ggplot(long_98_19, aes(x = x,
   )
 
 # Combined
-ggplot(long_combined, aes(x = x, 
+ggplot(long_combine, aes(x = x, 
                next_x = next_x, 
                node = node, 
                next_node = next_node,
                fill = factor(node))) +
-  geom_sankey()
+  geom_sankey() +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 12),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+ggsave("combined_sankey.jpeg", width = 8, height = 7)
 
 ```
 
