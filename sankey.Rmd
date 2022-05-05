@@ -19,6 +19,7 @@ library(ggalluvial)
 library(networkD3)
 library(htmlwidgets)
 library(webshot)
+library(naniar)
 
 # Read in Data
 #---------------------------------------
@@ -125,7 +126,8 @@ long_98_19 <- uncount_98_19 %>%
 # write.csv(uncount_87_98,"set1.csv")
 # write.csv(uncount_98_19,"set2.csv")
 
-sankey_combined <- read.csv("combinedSet.csv")
+sankey_combined <- read.csv(here("Intermediate Data", "combinedSet.csv")) %>% 
+  replace_with_na(replace = list(lu_1987 = "n/a"))  
 
 # Make Long
 long_combine <- sankey_combined %>% 
@@ -191,7 +193,7 @@ ggplot(long_98_19, aes(x = x,
   )
 
 # Combined
-sankey_combine_plot <- ggplot(long_combine, aes(x = x, 
+sankey_combine_plot <- ggplot(data = long_combine, aes(x = x, 
                next_x = next_x, 
                node = node, 
                next_node = next_node,
@@ -212,6 +214,8 @@ sankey_combine_plot <- ggplot(long_combine, aes(x = x,
     plot.background = element_rect(fill = "white", color = NA),
     rect = element_rect(fill = "white", color = NA)
   )
+
+sankey_combine_plot
 
 # Save
 ggsave(here("Images", "combined_sankey.jpeg"), sankey_combine_plot, width = 8, height = 7)
@@ -470,7 +474,7 @@ d3_combined_plot <- sankeyNetwork(Links = links_combined, Nodes = nodes_combined
 
 d3_combined_plot
 
-htmlwidgets::onRender(plot_combined, '
+htmlwidgets::onRender(d3_combined_plot, '
   function(el) { 
     var cols_x = this.sankey.nodes().map(d => d.x).filter((v, i, a) => a.indexOf(v) === i).sort(function(a, b){return a - b});
     var labels = ["1987", "1998", "2019"];
