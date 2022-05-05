@@ -1,0 +1,65 @@
+"","source","total_1998","target","change_98_19"
+"1","Palm",10739.16,"palm",5333.94
+"2","Palm",10739.16,"mangrove",0.36
+"3","Palm",10739.16,"water",7.38
+"4","Palm",10739.16,"grassland",1292.58
+"5","Palm",10739.16,"exposed_soil_urban",248.4
+"6","Palm",10739.16,"primary_forest",3197.34
+"7","Palm",10739.16,"wetland",460.62
+"8","Palm",10739.16,"teak_melina",198.54
+"9","Mangrove",15070.32,"palm",10.53
+"10","Mangrove",15070.32,"mangrove",11263.05
+"11","Mangrove",15070.32,"water",695.7
+"12","Mangrove",15070.32,"grassland",14.13
+"13","Mangrove",15070.32,"exposed_soil_urban",56.07
+"14","Mangrove",15070.32,"primary_forest",1673.64
+"15","Mangrove",15070.32,"wetland",1356.93
+"16","Mangrove",15070.32,"teak_melina",0.27
+"17","Water",12120.66,"palm",18.45
+"18","Water",12120.66,"mangrove",261.18
+"19","Water",12120.66,"water",11044.53
+"20","Water",12120.66,"grassland",81.09
+"21","Water",12120.66,"exposed_soil_urban",279.63
+"22","Water",12120.66,"primary_forest",337.59
+"23","Water",12120.66,"wetland",98.19
+"24","Water",12120.66,"teak_melina",0
+"25","Grassland",49335.21,"palm",10218.51
+"26","Grassland",49335.21,"mangrove",18.9
+"27","Grassland",49335.21,"water",265.41
+"28","Grassland",49335.21,"grassland",17771.49
+"29","Grassland",49335.21,"exposed_soil_urban",4980.24
+"30","Grassland",49335.21,"primary_forest",13987.62
+"31","Grassland",49335.21,"wetland",1132.2
+"32","Grassland",49335.21,"teak_melina",960.84
+"33","Exposed soil / Urban",3884.94,"palm",969.21
+"34","Exposed soil / Urban",3884.94,"mangrove",4.23
+"35","Exposed soil / Urban",3884.94,"water",409.77
+"36","Exposed soil / Urban",3884.94,"grassland",383.85
+"37","Exposed soil / Urban",3884.94,"exposed_soil_urban",1644.93
+"38","Exposed soil / Urban",3884.94,"primary_forest",366.93
+"39","Exposed soil / Urban",3884.94,"wetland",95.31
+"40","Exposed soil / Urban",3884.94,"teak_melina",10.71
+"41","Forest",179441.64,"palm",6118.11
+"42","Forest",179441.64,"mangrove",627.03
+"43","Forest",179441.64,"water",131.85
+"44","Forest",179441.64,"grassland",4433.31
+"45","Forest",179441.64,"exposed_soil_urban",1449.72
+"46","Forest",179441.64,"primary_forest",162252.72
+"47","Forest",179441.64,"wetland",2399.67
+"48","Forest",179441.64,"teak_melina",2029.23
+"49","Wetland",11572.65,"palm",288.81
+"50","Wetland",11572.65,"mangrove",147.24
+"51","Wetland",11572.65,"water",54.36
+"52","Wetland",11572.65,"grassland",358.38
+"53","Wetland",11572.65,"exposed_soil_urban",308.97
+"54","Wetland",11572.65,"primary_forest",2976.3
+"55","Wetland",11572.65,"wetland",7374.42
+"56","Wetland",11572.65,"teak_melina",64.17
+"57","Teak / Melina",1872.54,"palm",216.27
+"58","Teak / Melina",1872.54,"mangrove",0
+"59","Teak / Melina",1872.54,"water",0.36
+"60","Teak / Melina",1872.54,"grassland",112.41
+"61","Teak / Melina",1872.54,"exposed_soil_urban",14.49
+"62","Teak / Melina",1872.54,"primary_forest",1181.79
+"63","Teak / Melina",1872.54,"wetland",5.04
+"64","Teak / Melina",1872.54,"teak_melina",342.18

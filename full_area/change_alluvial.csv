@@ -1,0 +1,129 @@
+"","source","target","step","area"
+"1","Exposed soil / Urban","exposed_soil_urban","change_87_98",1663.65
+"2","Exposed soil / Urban","exposed_soil_urban","change_98_19",1644.93
+"3","Exposed soil / Urban","grassland","change_87_98",12648.87
+"4","Exposed soil / Urban","grassland","change_98_19",383.85
+"5","Exposed soil / Urban","mangrove","change_87_98",117.18
+"6","Exposed soil / Urban","mangrove","change_98_19",4.23
+"7","Exposed soil / Urban","palm","change_87_98",1532.43
+"8","Exposed soil / Urban","palm","change_98_19",969.21
+"9","Exposed soil / Urban","primary_forest","change_87_98",8809.29
+"10","Exposed soil / Urban","primary_forest","change_98_19",366.93
+"11","Exposed soil / Urban","teak_melina","change_87_98",178.38
+"12","Exposed soil / Urban","teak_melina","change_98_19",10.71
+"13","Exposed soil / Urban","water","change_87_98",439.47
+"14","Exposed soil / Urban","water","change_98_19",409.77
+"15","Exposed soil / Urban","wetland","change_87_98",586.8
+"16","Exposed soil / Urban","wetland","change_98_19",95.31
+"17","Forest","exposed_soil_urban","change_87_98",267.93
+"18","Forest","exposed_soil_urban","change_98_19",1449.72
+"19","Forest","grassland","change_87_98",7868.7
+"20","Forest","grassland","change_98_19",4433.31
+"21","Forest","mangrove","change_87_98",1559.7
+"22","Forest","mangrove","change_98_19",627.03
+"23","Forest","palm","change_87_98",2368.44
+"24","Forest","palm","change_98_19",6118.11
+"25","Forest","primary_forest","change_87_98",151609.68
+"26","Forest","primary_forest","change_98_19",162252.72
+"27","Forest","teak_melina","change_87_98",887.04
+"28","Forest","teak_melina","change_98_19",2029.23
+"29","Forest","water","change_87_98",159.48
+"30","Forest","water","change_98_19",131.85
+"31","Forest","wetland","change_87_98",5202.27
+"32","Forest","wetland","change_98_19",2399.67
+"33","Grassland","exposed_soil_urban","change_87_98",1606.05
+"34","Grassland","exposed_soil_urban","change_98_19",4980.24
+"35","Grassland","grassland","change_87_98",26242.56
+"36","Grassland","grassland","change_98_19",17771.49
+"37","Grassland","mangrove","change_87_98",109.26
+"38","Grassland","mangrove","change_98_19",18.9
+"39","Grassland","palm","change_87_98",4952.07
+"40","Grassland","palm","change_98_19",10218.51
+"41","Grassland","primary_forest","change_87_98",13328.01
+"42","Grassland","primary_forest","change_98_19",13987.62
+"43","Grassland","teak_melina","change_87_98",727.2
+"44","Grassland","teak_melina","change_98_19",960.84
+"45","Grassland","water","change_87_98",290.34
+"46","Grassland","water","change_98_19",265.41
+"47","Grassland","wetland","change_87_98",814.23
+"48","Grassland","wetland","change_98_19",1132.2
+"49","Mangrove","exposed_soil_urban","change_87_98",16.47
+"50","Mangrove","exposed_soil_urban","change_98_19",56.07
+"51","Mangrove","grassland","change_87_98",87.93
+"52","Mangrove","grassland","change_98_19",14.13
+"53","Mangrove","mangrove","change_87_98",11983.14
+"54","Mangrove","mangrove","change_98_19",11263.05
+"55","Mangrove","palm","change_87_98",3.24
+"56","Mangrove","palm","change_98_19",10.53
+"57","Mangrove","primary_forest","change_87_98",1996.02
+"58","Mangrove","primary_forest","change_98_19",1673.64
+"59","Mangrove","teak_melina","change_87_98",0.99
+"60","Mangrove","teak_melina","change_98_19",0.27
+"61","Mangrove","water","change_87_98",325.17
+"62","Mangrove","water","change_98_19",695.7
+"63","Mangrove","wetland","change_87_98",344.43
+"64","Mangrove","wetland","change_98_19",1356.93
+"65","Palm","exposed_soil_urban","change_87_98",32.31
+"66","Palm","exposed_soil_urban","change_98_19",248.4
+"67","Palm","grassland","change_87_98",1967.67
+"68","Palm","grassland","change_98_19",1292.58
+"69","Palm","mangrove","change_87_98",17.28
+"70","Palm","mangrove","change_98_19",0.36
+"71","Palm","palm","change_87_98",1840.68
+"72","Palm","palm","change_98_19",5333.94
+"73","Palm","primary_forest","change_87_98",2757.51
+"74","Palm","primary_forest","change_98_19",3197.34
+"75","Palm","teak_melina","change_87_98",76.23
+"76","Palm","teak_melina","change_98_19",198.54
+"77","Palm","water","change_87_98",35.01
+"78","Palm","water","change_98_19",7.38
+"79","Palm","wetland","change_87_98",323.1
+"80","Palm","wetland","change_98_19",460.62
+"81","Teak / Melina","exposed_soil_urban","change_87_98",0.99
+"82","Teak / Melina","exposed_soil_urban","change_98_19",14.49
+"83","Teak / Melina","grassland","change_87_98",30.15
+"84","Teak / Melina","grassland","change_98_19",112.41
+"85","Teak / Melina","mangrove","change_87_98",0.18
+"86","Teak / Melina","mangrove","change_98_19",0
+"87","Teak / Melina","palm","change_87_98",3.06
+"88","Teak / Melina","palm","change_98_19",216.27
+"89","Teak / Melina","primary_forest","change_87_98",32.94
+"90","Teak / Melina","primary_forest","change_98_19",1181.79
+"91","Teak / Melina","teak_melina","change_87_98",1.71
+"92","Teak / Melina","teak_melina","change_98_19",342.18
+"93","Teak / Melina","water","change_87_98",0
+"94","Teak / Melina","water","change_98_19",0.36
+"95","Teak / Melina","wetland","change_87_98",1.17
+"96","Teak / Melina","wetland","change_98_19",5.04
+"97","Water","exposed_soil_urban","change_87_98",207
+"98","Water","exposed_soil_urban","change_98_19",279.63
+"99","Water","grassland","change_87_98",156.42
+"100","Water","grassland","change_98_19",81.09
+"101","Water","mangrove","change_87_98",593.55
+"102","Water","mangrove","change_98_19",261.18
+"103","Water","palm","change_87_98",8.82
+"104","Water","palm","change_98_19",18.45
+"105","Water","primary_forest","change_87_98",187.56
+"106","Water","primary_forest","change_98_19",337.59
+"107","Water","teak_melina","change_87_98",0.09
+"108","Water","teak_melina","change_98_19",0
+"109","Water","water","change_87_98",10404.36
+"110","Water","water","change_98_19",11044.53
+"111","Water","wetland","change_87_98",59.76
+"112","Water","wetland","change_98_19",98.19
+"113","Wetland","exposed_soil_urban","change_87_98",81.54
+"114","Wetland","exposed_soil_urban","change_98_19",308.97
+"115","Wetland","grassland","change_87_98",343.53
+"116","Wetland","grassland","change_98_19",358.38
+"117","Wetland","mangrove","change_87_98",686.25
+"118","Wetland","mangrove","change_98_19",147.24
+"119","Wetland","palm","change_87_98",33.93
+"120","Wetland","palm","change_98_19",288.81
+"121","Wetland","primary_forest","change_87_98",762.93
+"122","Wetland","primary_forest","change_98_19",2976.3
+"123","Wetland","teak_melina","change_87_98",0.9
+"124","Wetland","teak_melina","change_98_19",64.17
+"125","Wetland","water","change_87_98",177.93
+"126","Wetland","water","change_98_19",54.36
+"127","Wetland","wetland","change_87_98",4240.26
+"128","Wetland","wetland","change_98_19",7374.42

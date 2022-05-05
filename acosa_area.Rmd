@@ -1,0 +1,107 @@
+---
+title: "Study Area by Region"
+author: "Marie Bouffard"
+date: "5/5/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#---------------------------------------
+# Load packages
+#---------------------------------------
+library(tidyverse)
+library(here)
+library(janitor)
+library(ggsankey)
+
+#---------------------------------------
+# Read in Data
+#---------------------------------------
+
+# Corcovado
+raw_corcovado_87_98 <- read.csv(here("Soroush", "data_corcovado_87_98.csv")) %>% 
+  clean_names()
+
+raw_corcovado_98_19 <- read.csv(here("Soroush", "data_corcovado_98_19.csv")) %>% 
+  clean_names()
+
+# Fbs
+
+# fonafifo
+
+# Golfo
+
+# Peninsula
+
+# Piedras
+
+# Terra
+
+```
+
+
+### Corcovado
+
+```{r}
+#---------------------------------------
+# Tidy Data
+#---------------------------------------
+#1987 to 1998
+corcovado_tidy_87_98 <- raw_corcovado_87_98 %>% 
+    pivot_longer(!land_use:area_starting_year, names_to = "lu_1998",
+               values_to = "change") %>% 
+  rename("lu_1987" = land_use) %>% 
+  mutate(lu_1998 = case_when(
+    lu_1998 == "palm" ~ "Palm",
+    lu_1998 == "mangrove" ~ "Mangrove",
+    lu_1998 == "water" ~ "Water",
+    lu_1998 == "grassland" ~ "Grassland",
+    lu_1998 == "exposed_soil_urban" ~ "Exposed soil / Urban",
+    lu_1998 == "primary_forest" ~ "Forest",
+    lu_1998 == "teak_melina" ~ "Teak / Melina",
+    lu_1998 == "wetland" ~ "Wetland")) %>% 
+    select(lu_1987, lu_1998, change) 
+
+#1998 to 2019
+corcovado_tidy_98_19 <- raw_corcovado_98_19 %>% 
+    pivot_longer(!land_use:area_starting_year, names_to = "lu_2019",
+               values_to = "change") %>% 
+  rename("lu_1998" = land_use) %>% 
+  mutate(lu_2019 = case_when(
+    lu_2019 == "palm" ~ "Palm",
+    lu_2019 == "mangrove" ~ "Mangrove",
+    lu_2019 == "water" ~ "Water",
+    lu_2019 == "grassland" ~ "Grassland",
+    lu_2019 == "exposed_soil_urban" ~ "Exposed soil / Urban",
+    lu_2019 == "primary_forest" ~ "Forest",
+    lu_2019 == "teak_melina" ~ "Teak / Melina",
+    lu_2019 == "wetland" ~ "Wetland")) %>% 
+    select(lu_1998, lu_2019, change) 
+
+#---------------------------------------
+# Uncount
+#---------------------------------------
+# 1987 to 1998
+corcovado_uncount_87_98 <- corcovado_tidy_87_98 %>% 
+  mutate(change = as.integer(change*100)) %>% 
+  uncount(change)
+
+# 1998 to 2019
+corcovado_uncount_98_19 <- corcovado_tidy_98_19 %>% 
+  mutate(change = as.integer(change*100)) %>% 
+  uncount(change)
+
+#---------------------------------------
+# Make long
+#---------------------------------------
+# 1987 to 1998
+corcovado_long_87_98 <- corcovado_uncount_87_98 %>% 
+  make_long(lu_1987:lu_1998)
+
+# 1998 to 2019
+corcovado_long_98_19 <- corcovado_uncount_98_19 %>% 
+  make_long(lu_1998:lu_2019)
+
+```
