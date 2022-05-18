@@ -321,6 +321,85 @@ fonafifo_long_combined <- fonafifo_combined %>%
 
 ```
 
+### Golfo
+
+```{r, cache=TRUE}
+#---------------------------------------
+# Tidy Data
+#---------------------------------------
+#1987 to 1998
+golfo_tidy_87_98 <- raw_golfo_87_98 %>% 
+    pivot_longer(!land_use:area_starting_year, names_to = "lu_1998",
+               values_to = "change") %>% 
+  rename("lu_1987" = land_use) %>% 
+  mutate(lu_1998 = case_when(
+    lu_1998 == "palm" ~ "Palm",
+    lu_1998 == "mangrove" ~ "Mangrove",
+    lu_1998 == "water" ~ "Water",
+    lu_1998 == "grassland" ~ "Grassland",
+    lu_1998 == "exposed_soil_urban" ~ "Exposed soil / Urban",
+    lu_1998 == "primary_forest" ~ "Forest",
+    lu_1998 == "teak_melina" ~ "Teak / Melina",
+    lu_1998 == "wetland" ~ "Wetland")) %>% 
+    select(lu_1987, lu_1998, change) 
+
+#1998 to 2019
+golfo_tidy_98_19 <- raw_golfo_98_19 %>% 
+    pivot_longer(!land_use:area_starting_year, names_to = "lu_2019",
+               values_to = "change") %>% 
+  rename("lu_1998" = land_use) %>% 
+  mutate(lu_2019 = case_when(
+    lu_2019 == "palm" ~ "Palm",
+    lu_2019 == "mangrove" ~ "Mangrove",
+    lu_2019 == "water" ~ "Water",
+    lu_2019 == "grassland" ~ "Grassland",
+    lu_2019 == "exposed_soil_urban" ~ "Exposed soil / Urban",
+    lu_2019 == "primary_forest" ~ "Forest",
+    lu_2019 == "teak_melina" ~ "Teak / Melina",
+    lu_2019 == "wetland" ~ "Wetland")) %>% 
+    select(lu_1998, lu_2019, change) 
+
+#---------------------------------------
+# Uncount
+#---------------------------------------
+# 1987 to 1998
+golfo_uncount_87_98 <- golfo_tidy_87_98 %>% 
+  mutate(change = round(change, digits = 0)) %>% 
+  uncount(change)
+
+# 1998 to 2019
+golfo_uncount_98_19 <- golfo_tidy_98_19 %>% 
+  mutate(change = round(change, digits = 0)) %>%
+  uncount(change)
+
+#---------------------------------------
+# Make long
+#---------------------------------------
+# 1987 to 1998
+# golfo_long_87_98 <- golfo_uncount_87_98 %>% 
+#   make_long(lu_1987:lu_1998)
+
+# 1998 to 2019
+# golfo_long_98_19 <- golfo_uncount_98_19 %>% 
+#   make_long(lu_1998:lu_2019)
+
+#---------------------------------------
+# Combine
+#---------------------------------------
+# Export to run combiner.exe
+# write.csv(golfo_uncount_87_98,"set1.csv")
+# write.csv(golfo_uncount_98_19,"set2.csv")
+
+# Read in combined csvs
+golfo_combined <- read.csv(here("Intermediate Data", "Golfo", "combinedSet.csv")) %>% 
+  replace_with_na(replace = list(lu_1987 = "n/a")) 
+
+# Make long
+golfo_long_combined <- golfo_combined %>% 
+  make_long(lu_1987:lu_2019)
+
+```
+
 ```{r}
 #---------------------------------------
 # Plots
@@ -412,5 +491,35 @@ fonafifo_plot
 
 # Save
 ggsave(here("Images", "fonafifo_sankey.jpeg"), fonafifo_plot, width = 8, height = 7)
+
+# Golfo
+#---------------------------------------
+golfo_plot <- ggplot(data = golfo_long_combined, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+golfo_plot
+
+# Save
+ggsave(here("Images", "golfo_sankey.jpeg"), golfo_plot, width = 8, height = 7)
+
 ```
 
