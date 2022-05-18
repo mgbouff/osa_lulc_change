@@ -39,12 +39,24 @@ raw_corcovado_98_19 <- read.csv(here("Soroush", "data_corcovado_98_19.csv")) %>%
 
 # Terra
 
+#---------------------------------------
+# Pallets
+#---------------------------------------
+class_pallete <- c("#feebbe", # Exposed Soil
+                   "#287404", # Forest
+                   "#e9ffbe", # Grassland
+                   "#74ffdf", # Mangrove
+                   "#ffff01", # Palm
+                   "#e60f03", # Teak
+                   "#0d5de6", # Water
+                   "#bed2ff" # Wetland
+                   )
 ```
 
 
 ### Corcovado
 
-```{r}
+```{r, cache=TRUE}
 #---------------------------------------
 # Tidy Data
 #---------------------------------------
@@ -85,23 +97,74 @@ corcovado_tidy_98_19 <- raw_corcovado_98_19 %>%
 #---------------------------------------
 # 1987 to 1998
 corcovado_uncount_87_98 <- corcovado_tidy_87_98 %>% 
-  mutate(change = as.integer(change*100)) %>% 
+  mutate(change = round(change, digits = 0)) %>% 
   uncount(change)
 
 # 1998 to 2019
 corcovado_uncount_98_19 <- corcovado_tidy_98_19 %>% 
-  mutate(change = as.integer(change*100)) %>% 
+  mutate(change = round(change, digits = 0)) %>%
   uncount(change)
 
 #---------------------------------------
 # Make long
 #---------------------------------------
 # 1987 to 1998
-corcovado_long_87_98 <- corcovado_uncount_87_98 %>% 
-  make_long(lu_1987:lu_1998)
+# corcovado_long_87_98 <- corcovado_uncount_87_98 %>% 
+#   make_long(lu_1987:lu_1998)
 
 # 1998 to 2019
-corcovado_long_98_19 <- corcovado_uncount_98_19 %>% 
-  make_long(lu_1998:lu_2019)
+# corcovado_long_98_19 <- corcovado_uncount_98_19 %>% 
+#   make_long(lu_1998:lu_2019)
+
+#---------------------------------------
+# Combine
+#---------------------------------------
+# Export to run combiner.exe
+# write.csv(corcovado_uncount_87_98,"set1.csv")
+# write.csv(corcovado_uncount_98_19,"set2.csv")
+
+# Read in combined csvs
+corcovado_combined <- read.csv(here("Intermediate Data", "Corcovado", "combinedSet.csv"))
+
+# Make long
+corcovado_long_combined <- corcovado_combined %>% 
+  make_long(lu_1987:lu_2019)
 
 ```
+
+
+```{r}
+#---------------------------------------
+# Plots
+#---------------------------------------
+
+# Corcovado
+corcovado_plot <- ggplot(data = corcovado_long_combined, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+corcovado_plot
+
+# Save
+ggsave(here("Images", "corcovado_sankey.jpeg"), corcovado_plot, width = 8, height = 7)
+
+```
+
