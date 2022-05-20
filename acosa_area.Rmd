@@ -64,7 +64,7 @@ raw_piedras_98_19 <- read.csv(here("Soroush", "data_piedras_98_19.csv")) %>%
   clean_names()
 
 # Terra
-raw_terrao_87_98 <- read.csv(here("Soroush", "data_terra_87_98.csv")) %>% 
+raw_terra_87_98 <- read.csv(here("Soroush", "data_terra_87_98.csv")) %>% 
   clean_names()
 
 raw_terra_98_19 <- read.csv(here("Soroush", "data_terra_98_19.csv")) %>% 
@@ -79,6 +79,16 @@ class_pallete <- c("#feebbe", # Exposed Soil
                    "#74ffdf", # Mangrove
                    "#ffff01", # Palm
                    "#e60f03", # Teak
+                   "#0d5de6", # Water
+                   "#bed2ff" # Wetland
+                   )
+
+no_teak_pallete <- c("#feebbe", # Exposed Soil
+                   "#287404", # Forest
+                   "#e9ffbe", # Grassland
+                   "#74ffdf", # Mangrove
+                   "#ffff01", # Palm
+                   # "#e60f03", # Teak
                    "#0d5de6", # Water
                    "#bed2ff" # Wetland
                    )
@@ -480,6 +490,82 @@ piedras_long_combined <- piedras_combined %>%
 ```
 
 ### Terra
+```{r, cache=TRUE}
+#---------------------------------------
+# Tidy Data
+#---------------------------------------
+#1987 to 1998
+terra_tidy_87_98 <- raw_terra_87_98 %>% 
+    pivot_longer(!land_use:area_starting_year, names_to = "lu_1998",
+               values_to = "change") %>% 
+  rename("lu_1987" = land_use) %>% 
+  mutate(lu_1998 = case_when(
+    lu_1998 == "palm" ~ "Palm",
+    lu_1998 == "mangrove" ~ "Mangrove",
+    lu_1998 == "water" ~ "Water",
+    lu_1998 == "grassland" ~ "Grassland",
+    lu_1998 == "exposed_soil_urban" ~ "Exposed soil / Urban",
+    lu_1998 == "primary_forest" ~ "Forest",
+    lu_1998 == "teak_melina" ~ "Teak / Melina",
+    lu_1998 == "wetland" ~ "Wetland")) %>% 
+    select(lu_1987, lu_1998, change) 
+
+#1998 to 2019
+terra_tidy_98_19 <- raw_terra_98_19 %>% 
+    pivot_longer(!land_use:area_starting_year, names_to = "lu_2019",
+               values_to = "change") %>% 
+  rename("lu_1998" = land_use) %>% 
+  mutate(lu_2019 = case_when(
+    lu_2019 == "palm" ~ "Palm",
+    lu_2019 == "mangrove" ~ "Mangrove",
+    lu_2019 == "water" ~ "Water",
+    lu_2019 == "grassland" ~ "Grassland",
+    lu_2019 == "exposed_soil_urban" ~ "Exposed soil / Urban",
+    lu_2019 == "primary_forest" ~ "Forest",
+    lu_2019 == "teak_melina" ~ "Teak / Melina",
+    lu_2019 == "wetland" ~ "Wetland")) %>% 
+    select(lu_1998, lu_2019, change) 
+
+#---------------------------------------
+# Uncount
+#---------------------------------------
+# 1987 to 1998
+terra_uncount_87_98 <- terra_tidy_87_98 %>% 
+  mutate(change = round(change, digits = 0)) %>% 
+  uncount(change)
+
+# 1998 to 2019
+terra_uncount_98_19 <- terra_tidy_98_19 %>% 
+  mutate(change = round(change, digits = 0)) %>%
+  uncount(change)
+
+#---------------------------------------
+# Make long
+#---------------------------------------
+# 1987 to 1998
+# terra_long_87_98 <- terra_uncount_87_98 %>% 
+#   make_long(lu_1987:lu_1998)
+
+# 1998 to 2019
+# terra_long_98_19 <- terra_uncount_98_19 %>% 
+#   make_long(lu_1998:lu_2019)
+
+#---------------------------------------
+# Combine
+#---------------------------------------
+# Export to run combiner.exe
+write.csv(terra_uncount_87_98,"set1.csv")
+write.csv(terra_uncount_98_19,"set2.csv")
+
+# Read in combined csvs
+terra_combined <- read.csv(here("Intermediate Data", "Terra", "combinedSet.csv")) %>% 
+  replace_with_na(replace = list(lu_1987 = "n/a")) 
+
+# Make long
+terra_long_combined <- terra_combined %>% 
+  make_long(lu_1987:lu_2019)
+
+```
 
 ```{r}
 #---------------------------------------
@@ -629,7 +715,36 @@ piedras_plot <- ggplot(data = piedras_long_combined, aes(x = x,
 piedras_plot
 
 # Save
-ggsave(here("Images", "piedras_sankey.jpeg"), golfo_plot, width = 8, height = 7)
+ggsave(here("Images", "piedras_sankey.jpeg"), piedras_plot, width = 8, height = 7)
+
+# Terra
+#---------------------------------------
+terra_plot <- ggplot(data = terra_long_combined, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = no_teak_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+terra_plot
+
+# Save
+ggsave(here("Images", "terra_sankey.jpeg"), terra_plot, width = 8, height = 7)
 
 ```
 
