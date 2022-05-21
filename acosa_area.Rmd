@@ -16,6 +16,7 @@ library(here)
 library(janitor)
 library(ggsankey)
 library(naniar)
+library(patchwork)
 
 #---------------------------------------
 # Read in Data
@@ -173,7 +174,7 @@ corcovado_long_combined <- corcovado_combined %>%
 
 ```
 
-### FBS
+### Sustainable Biodiversity Fund (FBS)
 
 ```{r, cache=TRUE}
 #---------------------------------------
@@ -331,7 +332,7 @@ fonafifo_long_combined <- fonafifo_combined %>%
 
 ```
 
-### Golfo
+### Golfo Dulce
 
 ```{r, cache=TRUE}
 #---------------------------------------
@@ -410,7 +411,7 @@ golfo_long_combined <- golfo_combined %>%
 
 ```
 
-### Piedras
+### Piedras Blancas
 
 ```{r, cache=TRUE}
 #---------------------------------------
@@ -489,7 +490,8 @@ piedras_long_combined <- piedras_combined %>%
 
 ```
 
-### Terra
+### Terra Sierpe
+
 ```{r, cache=TRUE}
 #---------------------------------------
 # Tidy Data
@@ -745,6 +747,176 @@ terra_plot
 
 # Save
 ggsave(here("Images", "terra_sankey.jpeg"), terra_plot, width = 8, height = 7)
+
+```
+### Plots together
+
+```{r}
+
+# Corcovado
+#---------------------------------------
+corcovado_patch <- ggplot(data = corcovado_long_combined, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  ggtitle("Corcovado") +
+  theme_minimal() +
+  coord_cartesian(clip = 'off') +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.text.x = element_text(size = 12),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+# FBS
+#---------------------------------------
+fbs_patch <- ggplot(data = fbs_long_combined, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  ggtitle("Sustainable Biodiversity Fund") +
+  theme_minimal() +
+  coord_cartesian(clip = 'off') +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.text.x = element_text(size = 12),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+# Fonafifo
+#---------------------------------------
+fonafifo_patch <- ggplot(data = fonafifo_long_combined, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  ggtitle("Fonafifo Farms") +
+  theme_minimal() +
+  coord_cartesian(clip = 'off') +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.text.x = element_text(size = 12),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+# Golfo
+#---------------------------------------
+golfo_patch <- ggplot(data = golfo_long_combined, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  ggtitle("Golfo Dulce") +
+  coord_cartesian(clip = 'off') +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.text.x = element_text(size = 12),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+# Piedras
+#---------------------------------------
+piedras_patch <- ggplot(data = piedras_long_combined, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  ggtitle("Piedras Blancas") +
+  theme_minimal() +
+  coord_cartesian(clip = 'off') +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 12),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+terra_patch <- ggplot(data = terra_long_combined, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  ggtitle("Terra Sierpe") +
+  theme_minimal() +
+  coord_cartesian(clip = 'off') +
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    legend.position = "none",
+    axis.text.x = element_text(size = 12),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    # panel.background = element_rect(fill = "white"),
+    # plot.background = element_rect(fill = "white", color = NA),
+    # rect = element_rect(fill = "white", color = NA)
+  )
+
+#---------------------------------------
+# Patchwork
+#---------------------------------------
+
+acosa_patchwork <- (corcovado_patch | fbs_patch | fonafifo_patch) / (golfo_patch | piedras_patch | terra_patch)
+
+acosa_patchwork
+
+ggsave(here("Images", "acosa_patchwork.jpeg"), acosa_patchwork, width = 11, height = 7)
 
 ```
 
