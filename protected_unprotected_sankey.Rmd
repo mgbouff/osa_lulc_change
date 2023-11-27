@@ -44,3 +44,172 @@ npa_change_98_19 <- read.csv(here("Protected_Unprotected", "NonPA98-19.csv")) %>
   clean_names()
 
 ```
+
+```{r}
+#---------------------------------------
+# Format for ggsankey
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+# 1987 to 1998
+tidy_pa_87_98 <- pa_change_87_98 %>% 
+  rename("lu_1987" = x87_landuse,
+         "lu_1998" = x98_landuse,
+         "change" = ha)
+
+tidy_pa_98_19 <- pa_change_98_19 %>% 
+  rename("lu_1998" = x98_landuse,
+         "lu_2019" = x19_landuse,
+         "change" = ha)
+
+# Non Protected Areas
+#---------------------------------------
+# 1987 to 1998
+tidy_npa_87_98 <- npa_change_87_98 %>% 
+  rename("lu_1987" = x87_landuse,
+         "lu_1998" = x98_landuse,
+         "change" = ha_non_protected)
+
+tidy_npa_98_19 <- npa_change_98_19 %>% 
+  rename("lu_1998" = x98_landuse,
+         "lu_2019" = x19_landuse,
+         "change" = ha_non_protected)
+
+#---------------------------------------
+# Uncount
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+# 1987 to 1998
+uncount_pa_87_98 <- tidy_pa_87_98 %>% 
+  mutate(change = round(change, digits = 0)) %>% 
+  uncount(change)
+
+# 1998 to 2019
+uncount_pa_98_19 <- tidy_pa_98_19 %>% 
+  mutate(change = round(change, digits = 0)) %>% 
+  uncount(change)
+
+# Non Protected Areas
+#---------------------------------------
+# 1987 to 1998
+uncount_npa_87_98 <- tidy_npa_87_98 %>% 
+  mutate(change = round(change, digits = 0)) %>% 
+  uncount(change)
+
+# 1998 to 2019
+uncount_npa_98_19 <- tidy_npa_98_19 %>% 
+  mutate(change = round(change, digits = 0)) %>% 
+  uncount(change)
+
+```
+```{r}
+#---------------------------------------
+# Combine
+#---------------------------------------
+# Create set1 and set 2 CSVs
+# Move CSVs into Intermediate Data folder > subset folder e.g. "Protected"
+# Open CSVs and delete the first column
+# Move Combiner.exe into subset folder and run to produc combined set csv
+
+# Protected Areas
+#---------------------------------------
+# Export to run combiner.exe
+# write.csv(uncount_pa_87_98,"set1.csv")
+# write.csv(uncount_pa_98_19,"set2.csv")
+
+# Read in combined csvs
+pa_combined <- read.csv(here("Intermediate Data", "Protected", "combinedSet.csv")) %>% 
+  replace_with_na(replace = list(lu_1987 = "n/a"))
+
+# Non Protected Areas
+#---------------------------------------
+# Export to run combiner.exe
+write.csv(uncount_npa_87_98,"set1.csv")
+write.csv(uncount_npa_98_19,"set2.csv")
+
+# Read in combined csvs
+npa_combined <- read.csv(here("Intermediate Data", "NonProtected", "combinedSet.csv")) %>% 
+  replace_with_na(replace = list(lu_1987 = "n/a"))
+
+```
+
+
+```{r}
+#---------------------------------------
+# Make Long
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+pa_long <- pa_combined %>% 
+  make_long(lu_1987:lu_2019)
+
+# Non Protected Areas
+#---------------------------------------
+npa_long <- npa_combined %>% 
+  make_long(lu_1987:lu_2019)
+
+```
+
+```{r}
+#---------------------------------------
+# Plots
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+protected_plot <- ggplot(data = pa_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  # scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+protected_plot
+
+# Non Protected Areas
+#---------------------------------------
+nonprotected_plot <- ggplot(data = npa_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  # scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+nonprotected_plot
+
+```
+
