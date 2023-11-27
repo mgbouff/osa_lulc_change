@@ -43,6 +43,18 @@ npa_change_87_98 <- read.csv(here("Protected_Unprotected", "NonPA87-98.csv")) %>
 npa_change_98_19 <- read.csv(here("Protected_Unprotected", "NonPA98-19.csv")) %>% 
   clean_names()
 
+#---------------------------------------
+# Color Palettes
+#---------------------------------------
+class_pallete <- c("Exposed Soil/Urban" = "#feebbe",
+                   "Forest" = "#287404",
+                   "Grassland/Pasture" = "#e9ffbe",
+                   "Mangrove" = "#74ffdf",
+                   "Palm" = "#ffff01",
+                   "Teak/Gmelina" = "#e60f03",
+                   "Water" = "#0d5de6",
+                   "Wetland" = "#bed2ff"
+                   )
 ```
 
 ```{r}
@@ -54,27 +66,115 @@ npa_change_98_19 <- read.csv(here("Protected_Unprotected", "NonPA98-19.csv")) %>
 #---------------------------------------
 # 1987 to 1998
 tidy_pa_87_98 <- pa_change_87_98 %>% 
-  rename("lu_1987" = x87_landuse,
-         "lu_1998" = x98_landuse,
-         "change" = ha)
+    mutate(lu_1987 = case_when(
+    x87_landuse == 1 ~ "Palm",
+    x87_landuse == 2 ~ "Mangrove",
+    x87_landuse == 3 ~ "Water",
+    x87_landuse == 4 ~ "Grassland/Pasture",
+    x87_landuse == 5 ~ "Exposed Soil/Urban",
+    x87_landuse == 6 ~ "Forest",
+    x87_landuse == 7 ~ "Forest",
+    x87_landuse == 8 ~ "Wetland",
+    x87_landuse == 9 ~ "Teak/Gmelina"),
+    lu_1998 = case_when(
+      x98_landuse == 1 ~ "Palm",
+      x98_landuse == 2 ~ "Mangrove",
+      x98_landuse == 3 ~ "Water",
+      x98_landuse == 4 ~ "Grassland/Pasture",
+      x98_landuse == 5 ~ "Exposed Soil/Urban",
+      x98_landuse == 6 ~ "Forest",
+      x98_landuse == 7 ~ "Forest",
+      x98_landuse == 8 ~ "Wetland",
+      x98_landuse == 9 ~ "Teak/Gmelina"
+    )) %>% 
+  rename("change" = ha) %>% 
+  select(lu_1987, lu_1998, change) %>% 
+  drop_na()
 
+# 1998 to 2019
 tidy_pa_98_19 <- pa_change_98_19 %>% 
-  rename("lu_1998" = x98_landuse,
-         "lu_2019" = x19_landuse,
-         "change" = ha)
+  mutate(lu_1998 = case_when(
+      x98_landuse == 1 ~ "Palm",
+      x98_landuse == 2 ~ "Mangrove",
+      x98_landuse == 3 ~ "Water",
+      x98_landuse == 4 ~ "Grassland/Pasture",
+      x98_landuse == 5 ~ "Exposed Soil/Urban",
+      x98_landuse == 6 ~ "Forest",
+      x98_landuse == 7 ~ "Forest",
+      x98_landuse == 8 ~ "Wetland",
+      x98_landuse == 9 ~ "Teak/Gmelina"
+    ),
+    lu_2019 = case_when(
+      x19_landuse == 1 ~ "Palm",
+      x19_landuse == 2 ~ "Mangrove",
+      x19_landuse == 3 ~ "Water",
+      x19_landuse == 4 ~ "Grassland/Pasture",
+      x19_landuse == 5 ~ "Exposed Soil/Urban",
+      x19_landuse == 6 ~ "Forest",
+      x19_landuse == 7 ~ "Forest",
+      x19_landuse == 8 ~ "Wetland",
+      x19_landuse == 9 ~ "Teak/Gmelina"
+    )) %>% 
+  rename("change" = ha) %>% 
+  select(lu_1998, lu_2019, change) %>% 
+  drop_na()
 
 # Non Protected Areas
 #---------------------------------------
 # 1987 to 1998
 tidy_npa_87_98 <- npa_change_87_98 %>% 
-  rename("lu_1987" = x87_landuse,
-         "lu_1998" = x98_landuse,
-         "change" = ha_non_protected)
+  mutate(lu_1987 = case_when(
+    x87_landuse == 1 ~ "Palm",
+    x87_landuse == 2 ~ "Mangrove",
+    x87_landuse == 3 ~ "Water",
+    x87_landuse == 4 ~ "Grassland/Pasture",
+    x87_landuse == 5 ~ "Exposed Soil/Urban",
+    x87_landuse == 6 ~ "Forest",
+    x87_landuse == 7 ~ "Forest",
+    x87_landuse == 8 ~ "Wetland",
+    x87_landuse == 9 ~ "Teak/Gmelina"),
+    lu_1998 = case_when(
+      x98_landuse == 1 ~ "Palm",
+      x98_landuse == 2 ~ "Mangrove",
+      x98_landuse == 3 ~ "Water",
+      x98_landuse == 4 ~ "Grassland/Pasture",
+      x98_landuse == 5 ~ "Exposed Soil/Urban",
+      x98_landuse == 6 ~ "Forest",
+      x98_landuse == 7 ~ "Forest",
+      x98_landuse == 8 ~ "Wetland",
+      x98_landuse == 9 ~ "Teak/Gmelina"
+    )) %>% 
+  rename("change" = ha_non_protected) %>% 
+  select(lu_1987, lu_1998, change) %>% 
+  drop_na()
 
+# 1998 to 2019
 tidy_npa_98_19 <- npa_change_98_19 %>% 
-  rename("lu_1998" = x98_landuse,
-         "lu_2019" = x19_landuse,
-         "change" = ha_non_protected)
+  mutate(lu_1998 = case_when(
+      x98_landuse == 1 ~ "Palm",
+      x98_landuse == 2 ~ "Mangrove",
+      x98_landuse == 3 ~ "Water",
+      x98_landuse == 4 ~ "Grassland/Pasture",
+      x98_landuse == 5 ~ "Exposed Soil/Urban",
+      x98_landuse == 6 ~ "Forest",
+      x98_landuse == 7 ~ "Forest",
+      x98_landuse == 8 ~ "Wetland",
+      x98_landuse == 9 ~ "Teak/Gmelina"
+    ),
+    lu_2019 = case_when(
+      x19_landuse == 1 ~ "Palm",
+      x19_landuse == 2 ~ "Mangrove",
+      x19_landuse == 3 ~ "Water",
+      x19_landuse == 4 ~ "Grassland/Pasture",
+      x19_landuse == 5 ~ "Exposed Soil/Urban",
+      x19_landuse == 6 ~ "Forest",
+      x19_landuse == 7 ~ "Forest",
+      x19_landuse == 8 ~ "Wetland",
+      x19_landuse == 9 ~ "Teak/Gmelina"
+    )) %>% 
+  rename("change" = ha_non_protected) %>% 
+  select(lu_1998, lu_2019, change) %>% 
+  drop_na()
 
 #---------------------------------------
 # Uncount
@@ -105,6 +205,7 @@ uncount_npa_98_19 <- tidy_npa_98_19 %>%
   uncount(change)
 
 ```
+
 ```{r}
 #---------------------------------------
 # Combine
@@ -121,18 +222,18 @@ uncount_npa_98_19 <- tidy_npa_98_19 %>%
 # write.csv(uncount_pa_98_19,"set2.csv")
 
 # Read in combined csvs
-pa_combined <- read.csv(here("Intermediate Data", "Protected", "combinedSet.csv")) %>% 
-  replace_with_na(replace = list(lu_1987 = "n/a"))
+pa_combined <- read.csv(here("Intermediate Data", "Protected", "combinedSet.csv"))
+  # replace_with_na(replace = list(lu_1987 = "n/a"))
 
 # Non Protected Areas
 #---------------------------------------
 # Export to run combiner.exe
-write.csv(uncount_npa_87_98,"set1.csv")
-write.csv(uncount_npa_98_19,"set2.csv")
+# write.csv(uncount_npa_87_98,"set1.csv")
+# write.csv(uncount_npa_98_19,"set2.csv")
 
 # Read in combined csvs
-npa_combined <- read.csv(here("Intermediate Data", "NonProtected", "combinedSet.csv")) %>% 
-  replace_with_na(replace = list(lu_1987 = "n/a"))
+npa_combined <- read.csv(here("Intermediate Data", "NonProtected", "combinedSet.csv"))
+  # replace_with_na(replace = list(lu_1987 = "n/a"))
 
 ```
 
@@ -168,7 +269,7 @@ protected_plot <- ggplot(data = pa_long, aes(x = x,
                fill = factor(node))) +
   geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
   scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
-  # scale_fill_manual(values = class_pallete) +
+  scale_fill_manual(values = class_pallete) +
   theme_minimal() +
   theme(
     legend.position = "bottom",
@@ -185,6 +286,9 @@ protected_plot <- ggplot(data = pa_long, aes(x = x,
 
 protected_plot
 
+# Save
+ggsave(here("Images", "protected_sankey.jpeg"), protected_plot, width = 8, height = 7)
+
 # Non Protected Areas
 #---------------------------------------
 nonprotected_plot <- ggplot(data = npa_long, aes(x = x, 
@@ -194,7 +298,7 @@ nonprotected_plot <- ggplot(data = npa_long, aes(x = x,
                fill = factor(node))) +
   geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
   scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
-  # scale_fill_manual(values = class_pallete) +
+  scale_fill_manual(values = class_pallete) +
   theme_minimal() +
   theme(
     legend.position = "bottom",
@@ -210,6 +314,70 @@ nonprotected_plot <- ggplot(data = npa_long, aes(x = x,
   )
 
 nonprotected_plot
+
+# Save
+ggsave(here("Images", "nonprotected_sankey.jpeg"), nonprotected_plot, width = 8, height = 7)
+
+```
+
+```{r}
+#---------------------------------------
+# Patchwork
+#---------------------------------------
+
+# Protected Areas
+protected_patch <- ggplot(data = pa_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+# Non Protected Areas
+nonprotected_patch <- ggplot(data = npa_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+# Combine
+#---------------------------------------
+protected_nonprotected_patchwork <- (protected_patch / nonprotected_patch)
+
+protected_nonprotected_patchwork 
+
+ggsave(here("Images", "graphicalabstract_patchwork.jpeg"), protected_nonprotected_patchwork)
 
 ```
 
