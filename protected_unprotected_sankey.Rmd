@@ -1,0 +1,46 @@
+---
+title: "Protected vs Unprotected Areas Sankey"
+author: "Marie Bouffard"
+date: "2023-11-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#---------------------------------------
+# Load packages
+#---------------------------------------
+library(tidyverse)
+library(here)
+library(janitor)
+library(ggsankey)
+library(ggalluvial)
+library(networkD3)
+library(htmlwidgets)
+library(webshot)
+library(naniar)
+
+#---------------------------------------
+# Read in Data
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+# 1987 to 1998
+pa_change_87_98 <- read.csv(here("Protected_Unprotected", "ProtectedAReas87-98.csv")) %>% 
+  clean_names()
+
+# 1998 to 2019
+pa_change_98_19 <- read.csv(here("Protected_Unprotected", "ProtectedAReas98-19.csv")) %>% 
+  clean_names()
+
+# Non-protected Areas
+#---------------------------------------
+npa_change_87_98 <- read.csv(here("Protected_Unprotected", "NonPA87-98.csv")) %>% 
+  clean_names()
+
+# 1998 to 2019
+npa_change_98_19 <- read.csv(here("Protected_Unprotected", "NonPA98-19.csv")) %>% 
+  clean_names()
+
+```
