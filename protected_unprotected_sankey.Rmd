@@ -19,6 +19,8 @@ library(networkD3)
 library(htmlwidgets)
 library(webshot)
 library(naniar)
+library(scales)
+library(patchwork)
 
 #---------------------------------------
 # Read in Data
@@ -335,7 +337,9 @@ protected_patch <- ggplot(data = pa_long, aes(x = x,
   scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
+  labs(title = "Protected Areas") +
   theme(
+    plot.title = element_text(hjust = 0.5),
     legend.position = "none",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
@@ -358,7 +362,9 @@ nonprotected_patch <- ggplot(data = npa_long, aes(x = x,
   scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
+  labs(title = "Non Protected Areas") +
   theme(
+    plot.title = element_text(hjust = 0.5),
     legend.position = "bottom",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
@@ -377,7 +383,7 @@ protected_nonprotected_patchwork <- (protected_patch / nonprotected_patch)
 
 protected_nonprotected_patchwork 
 
-ggsave(here("Images", "graphicalabstract_patchwork.jpeg"), protected_nonprotected_patchwork)
+ggsave(here("Images", "graphicalabstract_patchwork.jpeg"), protected_nonprotected_patchwork, width = 5, height = 8)
 
 ```
 
