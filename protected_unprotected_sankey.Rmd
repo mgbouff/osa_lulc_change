@@ -150,6 +150,18 @@ tidy_nonpa_transition <- nonpa_transition %>%
   select(lu_1987, lu_1998, lu_2019, change) %>% 
   drop_na()
 
+#---------------------------------------
+# Calculate hectares of data (0s excluded)
+#---------------------------------------
+# Protected Areas
+#---------------------------------------
+pa_total_area <- tidy_pa_transition %>% 
+  summarise(total = sum(change))
+
+# Non Protected Areas
+#---------------------------------------
+nonpa_total_area <- tidy_nonpa_transition %>% 
+  summarise(total = sum(change))
 ```
 
 ```{r}
