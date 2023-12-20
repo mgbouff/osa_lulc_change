@@ -26,6 +26,14 @@ library(patchwork)
 # Read in Data
 #---------------------------------------
 
+# Combined Sets
+#---------------------------------------
+pa_transition <- read.csv(here("Protected_Unprotected", "PA_87_98_19_transition.csv")) %>% 
+  clean_names()
+
+nonpa_transition <- read.csv(here("Protected_Unprotected", "nonPA_87_98_19_transition.csv")) %>% 
+  clean_names()
+
 # Protected Areas
 #---------------------------------------
 # 1987 to 1998
@@ -58,6 +66,192 @@ class_pallete <- c("Exposed Soil/Urban" = "#feebbe",
                    "Wetland" = "#bed2ff"
                    )
 ```
+
+```{r}
+#---------------------------------------
+# Format combined sets for ggsankey
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+tidy_pa_transition <- pa_transition %>% 
+    mutate(lu_1987 = case_when(
+    x87_landuse == 1 ~ "Palm",
+    x87_landuse == 2 ~ "Mangrove",
+    x87_landuse == 3 ~ "Water",
+    x87_landuse == 4 ~ "Grassland/Pasture",
+    x87_landuse == 5 ~ "Exposed Soil/Urban",
+    x87_landuse == 6 ~ "Forest",
+    x87_landuse == 7 ~ "Forest",
+    x87_landuse == 8 ~ "Wetland",
+    x87_landuse == 9 ~ "Teak/Gmelina"),
+    lu_1998 = case_when(
+      x98_landuse == 1 ~ "Palm",
+      x98_landuse == 2 ~ "Mangrove",
+      x98_landuse == 3 ~ "Water",
+      x98_landuse == 4 ~ "Grassland/Pasture",
+      x98_landuse == 5 ~ "Exposed Soil/Urban",
+      x98_landuse == 6 ~ "Forest",
+      x98_landuse == 7 ~ "Forest",
+      x98_landuse == 8 ~ "Wetland",
+      x98_landuse == 9 ~ "Teak/Gmelina"
+    ),
+    lu_2019 = case_when(
+      x19_landuse == 1 ~ "Palm",
+      x19_landuse == 2 ~ "Mangrove",
+      x19_landuse == 3 ~ "Water",
+      x19_landuse == 4 ~ "Grassland/Pasture",
+      x19_landuse == 5 ~ "Exposed Soil/Urban",
+      x19_landuse == 6 ~ "Forest",
+      x19_landuse == 7 ~ "Forest",
+      x19_landuse == 8 ~ "Wetland",
+      x19_landuse == 9 ~ "Teak/Gmelina"
+    )) %>% 
+  rename("change" = ha) %>% 
+  select(lu_1987, lu_1998, lu_2019, change) %>% 
+  drop_na()
+
+# Non Protected Areas
+#---------------------------------------
+tidy_nonpa_transition <- nonpa_transition %>% 
+    mutate(lu_1987 = case_when(
+    x87_landuse == 1 ~ "Palm",
+    x87_landuse == 2 ~ "Mangrove",
+    x87_landuse == 3 ~ "Water",
+    x87_landuse == 4 ~ "Grassland/Pasture",
+    x87_landuse == 5 ~ "Exposed Soil/Urban",
+    x87_landuse == 6 ~ "Forest",
+    x87_landuse == 7 ~ "Forest",
+    x87_landuse == 8 ~ "Wetland",
+    x87_landuse == 9 ~ "Teak/Gmelina"),
+    lu_1998 = case_when(
+      x98_landuse == 1 ~ "Palm",
+      x98_landuse == 2 ~ "Mangrove",
+      x98_landuse == 3 ~ "Water",
+      x98_landuse == 4 ~ "Grassland/Pasture",
+      x98_landuse == 5 ~ "Exposed Soil/Urban",
+      x98_landuse == 6 ~ "Forest",
+      x98_landuse == 7 ~ "Forest",
+      x98_landuse == 8 ~ "Wetland",
+      x98_landuse == 9 ~ "Teak/Gmelina"
+    ),
+    lu_2019 = case_when(
+      x19_landuse == 1 ~ "Palm",
+      x19_landuse == 2 ~ "Mangrove",
+      x19_landuse == 3 ~ "Water",
+      x19_landuse == 4 ~ "Grassland/Pasture",
+      x19_landuse == 5 ~ "Exposed Soil/Urban",
+      x19_landuse == 6 ~ "Forest",
+      x19_landuse == 7 ~ "Forest",
+      x19_landuse == 8 ~ "Wetland",
+      x19_landuse == 9 ~ "Teak/Gmelina"
+    )) %>% 
+  rename("change" = ha) %>% 
+  select(lu_1987, lu_1998, lu_2019, change) %>% 
+  drop_na()
+
+```
+
+```{r}
+#---------------------------------------
+# Uncount Combined Sets
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+uncount_pa_transition <- tidy_pa_transition %>% 
+  mutate(change = round((change*100), digits = 0)) %>% 
+  uncount(change)
+
+# Non Protected Areas
+#---------------------------------------
+uncount_nonpa_transition <- tidy_nonpa_transition %>% 
+  mutate(change = round((change*100), digits = 0)) %>% 
+  uncount(change)
+
+```
+
+```{r}
+#---------------------------------------
+# Make Long
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+pa_transition_long <- uncount_pa_transition %>% 
+  make_long(lu_1987:lu_2019)
+
+# Non Protected Areas
+#---------------------------------------
+nonpa_transition_long <- uncount_nonpa_transition %>% 
+  make_long(lu_1987:lu_2019)
+
+```
+
+
+```{r}
+#---------------------------------------
+# Plots
+#---------------------------------------
+pa_transition_plot <- ggplot(data = pa_transition_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+pa_transition_plot
+
+# Save
+ggsave(here("Images", "protectedareas_transition_sankey.jpeg"), pa_transition_plot, width = 8, height = 7)
+
+# Non Protected Areas
+#---------------------------------------
+nonpa_transition_plot <- ggplot(data = nonpa_transition_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+nonpa_transition_plot
+
+# Save
+ggsave(here("Images", "nonprotectedareas_transition_sankey.jpeg"), nonpa_transition_plot, width = 8, height = 7)
+```
+
+
+Old Data
 
 ```{r}
 #---------------------------------------
