@@ -155,13 +155,13 @@ tidy_nonpa_transition <- nonpa_transition %>%
 #---------------------------------------
 # Protected Areas
 #---------------------------------------
-# pa_total_area <- tidy_pa_transition %>% 
-#   summarise(total = sum(change))
-# 
-# # Non Protected Areas
-# #---------------------------------------
-# nonpa_total_area <- tidy_nonpa_transition %>% 
-#   summarise(total = sum(change))
+pa_total_area <- tidy_pa_transition %>%
+  summarise(total = sum(change))
+
+# Non Protected Areas
+#---------------------------------------
+nonpa_total_area <- tidy_nonpa_transition %>%
+  summarise(total = sum(change))
 ```
 
 ```{r}
@@ -278,9 +278,148 @@ transition_patchwork
 ggsave(here("Images", "graphicalabstract_patchwork_new.jpeg"), transition_patchwork, width = 8, height = 5)
 
 ```
+### Only Changes
+
+```{r}
+#---------------------------------------
+# Only cells that changed
+#---------------------------------------
+pa_transition_changeonly <- read.csv(here("Protected_Unprotected", "PA_Transition_ChangeOnly.csv")) %>% 
+  clean_names()
+
+nonpa_transition_changeonly <- read.csv(here("Protected_Unprotected", "NonPA_Transition_ChangeOnly.csv")) %>% 
+  clean_names()
+
+#---------------------------------------
+# Calculate hectares of data
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+pa_changeonly_total_area <- pa_transition_changeonly %>%
+  summarise(total = sum(change))
+
+# Non Protected Areas
+#---------------------------------------
+nonpa_changeonly_total_area <- nonpa_transition_changeonly %>%
+  summarise(total = sum(change))
+
+#---------------------------------------
+# Uncount Change Only
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+uncount_pa_changeonly <- pa_transition_changeonly %>% 
+  mutate(change = round((change*100), digits = 0)) %>% 
+  uncount(change)
+
+# Non Protected Areas
+#---------------------------------------
+uncount_nonpa_changeonly <- nonpa_transition_changeonly %>% 
+  mutate(change = round((change*100), digits = 0)) %>% 
+  uncount(change)
+
+#---------------------------------------
+# Make Long
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+pa_changeonly_long <- uncount_pa_changeonly %>% 
+  make_long(lu_1987:lu_2019)
+
+# Non Protected Areas
+#---------------------------------------
+nonpa_changeonly_long <- uncount_nonpa_changeonly %>% 
+  make_long(i_lu_1987:lu_2019)
+  
+```
+
+Plot only changes
+
+```{r}
+#---------------------------------------
+# Only Changes Plots
+#---------------------------------------
+pa_onlychanges_plot <- ggplot(data = pa_changeonly_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+    labs(title = "Protected Areas",
+       subtitle = "17,863 hectares") +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+pa_onlychanges_plot
+
+# Save
+ggsave(here("Images", "protectedareas_onlychanges_sankey.jpeg"), pa_onlychanges_plot, width = 8, height = 7)
+
+# Non Protected Areas
+#---------------------------------------
+nonpa_changeonly_plot <- ggplot(data = nonpa_changeonly_long, aes(x = x, 
+               next_x = next_x, 
+               node = node, 
+               next_node = next_node,
+               fill = factor(node))) +
+  geom_sankey(flow.alpha = 0.75, node.color = "gray30") +
+  scale_x_discrete(labels = c("i_lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
+  scale_fill_manual(values = class_pallete) +
+  theme_minimal() +
+    labs(title = "Non Protected Areas",
+       subtitle = "71,692 hectares") +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    axis.text.x = element_text(size = 14, face = "bold"),
+    axis.title.x = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.grid.major = element_blank(),
+    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white", color = NA),
+    rect = element_rect(fill = "white", color = NA)
+  )
+
+nonpa_changeonly_plot
+
+# Save
+ggsave(here("Images", "nonprotectedareas_changeonly_sankey.jpeg"), nonpa_changeonly_plot, width = 8, height = 7)
+
+# Combine
+#---------------------------------------
+changeonly_patchwork <- (pa_onlychanges_plot | nonpa_changeonly_plot)
+
+changeonly_patchwork
+
+ggsave(here("Images", "graphicalabstract_patchwork_changeonly.jpeg"), changeonly_patchwork, width = 8, height = 5)
+
+```
 
 
-Old Data
+### Old Data
+
+Format
 
 ```{r}
 #---------------------------------------
@@ -431,6 +570,8 @@ uncount_npa_98_19 <- tidy_npa_98_19 %>%
 
 ```
 
+Combine
+
 ```{r}
 #---------------------------------------
 # Combine
@@ -462,6 +603,7 @@ npa_combined <- read.csv(here("Intermediate Data", "NonProtected", "combinedSet.
 
 ```
 
+Make Long
 
 ```{r}
 #---------------------------------------
@@ -479,6 +621,8 @@ npa_long <- npa_combined %>%
   make_long(lu_1987:lu_2019)
 
 ```
+
+Plots
 
 ```{r}
 #---------------------------------------
@@ -546,6 +690,8 @@ nonprotected_plot
 ggsave(here("Images", "nonprotected_sankey.jpeg"), nonprotected_plot, width = 8, height = 7)
 
 ```
+
+Patchwork
 
 ```{r}
 #---------------------------------------

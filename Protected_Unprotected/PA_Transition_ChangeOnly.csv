@@ -1,0 +1,121 @@
+lu_1987,lu_1998,lu_2019,change
+Mangrove,Palm,Palm,0.9
+Water,Palm,Palm,0.09
+Grassland/Pasture,Palm,Palm,32.13
+Grassland/Pasture,Palm,Water,0.9
+Grassland/Pasture,Palm,Grassland/Pasture,207.18
+Grassland/Pasture,Palm,Exposed Soil/Urban,42.48
+Grassland/Pasture,Palm,Forest,126.54
+Exposed Soil/Urban,Palm,Forest,177.3
+Forest,Palm,Forest,200.61
+Forest,Palm,Forest,291.33
+Forest,Palm,Wetland,29.7
+Forest,Palm,Teak/Gmelina,14.67
+Wetland,Palm,Teak/Gmelina,4.14
+Palm,Mangrove,Mangrove,9
+Mangrove,Mangrove,Water,297.54
+Mangrove,Mangrove,Grassland/Pasture,4.86
+Mangrove,Mangrove,Exposed Soil/Urban,29.07
+Mangrove,Mangrove,Forest,225.18
+Water,Mangrove,Forest,257.94
+Grassland/Pasture,Mangrove,Forest,34.83
+Exposed Soil/Urban,Mangrove,Forest,44.19
+Forest,Mangrove,Forest,402.66
+Forest,Mangrove,Forest,80.46
+Forest,Mangrove,Wetland,302.58
+Wetland,Mangrove,Wetland,563.22
+Wetland,Mangrove,Teak/Gmelina,0.09
+Palm,Water,Mangrove,8.46
+Mangrove,Water,Mangrove,55.62
+Water,Water,Mangrove,11.43
+Grassland/Pasture,Water,Water,14.76
+Exposed Soil/Urban,Water,Water,37.71
+Forest,Water,Water,1.44
+Forest,Water,Water,40.05
+Forest,Water,Grassland/Pasture,5.22
+Forest,Water,Exposed Soil/Urban,0.36
+Wetland,Water,Exposed Soil/Urban,63.81
+Wetland,Water,Forest,50.94
+Wetland,Water,Wetland,23.94
+Palm,Grassland/Pasture,Palm,176.76
+Mangrove,Grassland/Pasture,Palm,23.31
+Water,Grassland/Pasture,Palm,5.04
+Grassland/Pasture,Grassland/Pasture,Palm,60.57
+Grassland/Pasture,Grassland/Pasture,Mangrove,2.52
+Grassland/Pasture,Grassland/Pasture,Water,26.55
+Grassland/Pasture,Grassland/Pasture,Exposed Soil/Urban,336.78
+Grassland/Pasture,Grassland/Pasture,Forest,1.08
+Exposed Soil/Urban,Grassland/Pasture,Forest,1407.15
+Forest,Grassland/Pasture,Forest,343.89
+Forest,Grassland/Pasture,Forest,998.46
+Forest,Grassland/Pasture,Wetland,161.46
+Wetland,Grassland/Pasture,Wetland,37.89
+Wetland,Grassland/Pasture,Teak/Gmelina,15.21
+Teak/Gmelina,Grassland/Pasture,Teak/Gmelina,1.35
+Palm,Exposed Soil/Urban,Palm,2.16
+Palm,Exposed Soil/Urban,Mangrove,0.09
+Palm,Exposed Soil/Urban,Water,3.87
+Mangrove,Exposed Soil/Urban,Water,1.62
+Water,Exposed Soil/Urban,Water,26.28
+Grassland/Pasture,Exposed Soil/Urban,Water,35.55
+Grassland/Pasture,Exposed Soil/Urban,Grassland/Pasture,22.32
+Exposed Soil/Urban,Exposed Soil/Urban,Grassland/Pasture,1.8
+Exposed Soil/Urban,Exposed Soil/Urban,Forest,3.87
+Forest,Exposed Soil/Urban,Forest,33.12
+Forest,Exposed Soil/Urban,Forest,40.32
+Wetland,Exposed Soil/Urban,Forest,27.27
+Wetland,Exposed Soil/Urban,Wetland,8.01
+Wetland,Exposed Soil/Urban,Teak/Gmelina,0.99
+Palm,Forest,Palm,16.92
+Mangrove,Forest,Palm,15.57
+Mangrove,Forest,Mangrove,65.7
+Mangrove,Forest,Water,7.29
+Mangrove,Forest,Grassland/Pasture,53.19
+Water,Forest,Grassland/Pasture,7.92
+Grassland/Pasture,Forest,Grassland/Pasture,61.83
+Exposed Soil/Urban,Forest,Grassland/Pasture,31.05
+Exposed Soil/Urban,Forest,Exposed Soil/Urban,37.71
+Exposed Soil/Urban,Forest,Forest,23.31
+Forest,Forest,Wetland,40.77
+Forest,Forest,Teak/Gmelina,10.35
+Wetland,Forest,Teak/Gmelina,3.06
+Palm,Forest,Palm,192.33
+Palm,Forest,Mangrove,292.41
+Palm,Forest,Water,41.58
+Palm,Forest,Grassland/Pasture,20.88
+Mangrove,Forest,Grassland/Pasture,737.37
+Mangrove,Forest,Exposed Soil/Urban,195.57
+Mangrove,Forest,Forest,280.62
+Water,Forest,Forest,66.42
+Grassland/Pasture,Forest,Forest,2941.47
+Exposed Soil/Urban,Forest,Forest,2651.04
+Forest,Forest,Wetland,297.36
+Wetland,Forest,Wetland,64.53
+Wetland,Forest,Teak/Gmelina,216.09
+Teak/Gmelina,Forest,Teak/Gmelina,9.81
+Palm,Wetland,Palm,6.57
+Palm,Wetland,Mangrove,32.94
+Mangrove,Wetland,Mangrove,53.19
+Mangrove,Wetland,Water,21.24
+Mangrove,Wetland,Grassland/Pasture,68.67
+Mangrove,Wetland,Exposed Soil/Urban,41.58
+Water,Wetland,Exposed Soil/Urban,14.58
+Water,Wetland,Forest,1.62
+Grassland/Pasture,Wetland,Forest,110.61
+Exposed Soil/Urban,Wetland,Forest,82.53
+Forest,Wetland,Forest,250.2
+Forest,Wetland,Forest,586.08
+Forest,Wetland,Wetland,170.1
+Wetland,Wetland,Teak/Gmelina,14.04
+Palm,Teak/Gmelina,Palm,3.6
+Palm,Teak/Gmelina,Grassland/Pasture,20.07
+Mangrove,Teak/Gmelina,Grassland/Pasture,0.36
+Water,Teak/Gmelina,Grassland/Pasture,0.09
+Grassland/Pasture,Teak/Gmelina,Grassland/Pasture,5.13
+Grassland/Pasture,Teak/Gmelina,Exposed Soil/Urban,1.44
+Grassland/Pasture,Teak/Gmelina,Forest,86.22
+Exposed Soil/Urban,Teak/Gmelina,Forest,30.06
+Forest,Teak/Gmelina,Forest,277.38
+Forest,Teak/Gmelina,Forest,60.66
+Forest,Teak/Gmelina,Wetland,0.36
+Forest,Teak/Gmelina,Teak/Gmelina,43.38
