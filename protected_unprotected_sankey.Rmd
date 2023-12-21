@@ -155,13 +155,13 @@ tidy_nonpa_transition <- nonpa_transition %>%
 #---------------------------------------
 # Protected Areas
 #---------------------------------------
-pa_total_area <- tidy_pa_transition %>% 
-  summarise(total = sum(change))
-
-# Non Protected Areas
-#---------------------------------------
-nonpa_total_area <- tidy_nonpa_transition %>% 
-  summarise(total = sum(change))
+# pa_total_area <- tidy_pa_transition %>% 
+#   summarise(total = sum(change))
+# 
+# # Non Protected Areas
+# #---------------------------------------
+# nonpa_total_area <- tidy_nonpa_transition %>% 
+#   summarise(total = sum(change))
 ```
 
 ```{r}
@@ -214,7 +214,11 @@ pa_transition_plot <- ggplot(data = pa_transition_long, aes(x = x,
   scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
+    labs(title = "Protected Areas",
+       subtitle = "126,906 hectares") +
   theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
     legend.position = "bottom",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
@@ -243,7 +247,11 @@ nonpa_transition_plot <- ggplot(data = nonpa_transition_long, aes(x = x,
   scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
+    labs(title = "Non Protected Areas",
+       subtitle = "156,820 hectares") +
   theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
     legend.position = "bottom",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
@@ -260,6 +268,15 @@ nonpa_transition_plot
 
 # Save
 ggsave(here("Images", "nonprotectedareas_transition_sankey.jpeg"), nonpa_transition_plot, width = 8, height = 7)
+
+# Combine
+#---------------------------------------
+transition_patchwork <- (pa_transition_plot | nonpa_transition_plot)
+
+transition_patchwork
+
+ggsave(here("Images", "graphicalabstract_patchwork_new.jpeg"), transition_patchwork, width = 8, height = 5)
+
 ```
 
 
@@ -479,6 +496,7 @@ protected_plot <- ggplot(data = pa_long, aes(x = x,
   scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
+  labs(title = "Protected Areas") +
   theme(
     legend.position = "bottom",
     legend.title = element_blank(),
@@ -508,6 +526,7 @@ nonprotected_plot <- ggplot(data = npa_long, aes(x = x,
   scale_x_discrete(labels = c("lu_1987" = "1987", "lu_1998" = "1998", "lu_2019" = "2019")) +
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
+  labs(title = "Non Protected Areas") +
   theme(
     legend.position = "bottom",
     legend.title = element_blank(),
