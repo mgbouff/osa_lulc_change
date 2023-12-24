@@ -81,8 +81,8 @@ tidy_pa_transition <- pa_transition %>%
     x87_landuse == 3 ~ "Water",
     x87_landuse == 4 ~ "Grassland/Pasture",
     x87_landuse == 5 ~ "Exposed Soil/Urban",
-    x87_landuse == 6 ~ "a_Forest",
-    x87_landuse == 7 ~ "a_Forest",
+    x87_landuse == 6 ~ "Forest",
+    x87_landuse == 7 ~ "Forest",
     x87_landuse == 8 ~ "Wetland",
     x87_landuse == 9 ~ "Teak/Gmelina"),
     lu_1998 = case_when(
@@ -91,8 +91,8 @@ tidy_pa_transition <- pa_transition %>%
       x98_landuse == 3 ~ "Water",
       x98_landuse == 4 ~ "Grassland/Pasture",
       x98_landuse == 5 ~ "Exposed Soil/Urban",
-      x98_landuse == 6 ~ "a_Forest",
-      x98_landuse == 7 ~ "a_Forest",
+      x98_landuse == 6 ~ "Forest",
+      x98_landuse == 7 ~ "Forest",
       x98_landuse == 8 ~ "Wetland",
       x98_landuse == 9 ~ "Teak/Gmelina"
     ),
@@ -102,8 +102,8 @@ tidy_pa_transition <- pa_transition %>%
       x19_landuse == 3 ~ "Water",
       x19_landuse == 4 ~ "Grassland/Pasture",
       x19_landuse == 5 ~ "Exposed Soil/Urban",
-      x19_landuse == 6 ~ "a_Forest",
-      x19_landuse == 7 ~ "a_Forest",
+      x19_landuse == 6 ~ "Forest",
+      x19_landuse == 7 ~ "Forest",
       x19_landuse == 8 ~ "Wetland",
       x19_landuse == 9 ~ "Teak/Gmelina"
     )) %>% 
@@ -120,8 +120,8 @@ tidy_nonpa_transition <- nonpa_transition %>%
     x87_landuse == 3 ~ "Water",
     x87_landuse == 4 ~ "Grassland/Pasture",
     x87_landuse == 5 ~ "Exposed Soil/Urban",
-    x87_landuse == 6 ~ "a_Forest",
-    x87_landuse == 7 ~ "a_Forest",
+    x87_landuse == 6 ~ "Forest",
+    x87_landuse == 7 ~ "Forest",
     x87_landuse == 8 ~ "Wetland",
     x87_landuse == 9 ~ "Teak/Gmelina"),
     lu_1998 = case_when(
@@ -130,8 +130,8 @@ tidy_nonpa_transition <- nonpa_transition %>%
       x98_landuse == 3 ~ "Water",
       x98_landuse == 4 ~ "Grassland/Pasture",
       x98_landuse == 5 ~ "Exposed Soil/Urban",
-      x98_landuse == 6 ~ "a_Forest",
-      x98_landuse == 7 ~ "a_Forest",
+      x98_landuse == 6 ~ "Forest",
+      x98_landuse == 7 ~ "Forest",
       x98_landuse == 8 ~ "Wetland",
       x98_landuse == 9 ~ "Teak/Gmelina"
     ),
@@ -141,8 +141,8 @@ tidy_nonpa_transition <- nonpa_transition %>%
       x19_landuse == 3 ~ "Water",
       x19_landuse == 4 ~ "Grassland/Pasture",
       x19_landuse == 5 ~ "Exposed Soil/Urban",
-      x19_landuse == 6 ~ "a_Forest",
-      x19_landuse == 7 ~ "a_Forest",
+      x19_landuse == 6 ~ "Forest",
+      x19_landuse == 7 ~ "Forest",
       x19_landuse == 8 ~ "Wetland",
       x19_landuse == 9 ~ "Teak/Gmelina"
     )) %>% 
@@ -226,10 +226,11 @@ pa_transition_plot <- ggplot(data = pa_transition_long, aes(x = x,
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
     labs(title = "Protected Areas",
-       caption = "126,906 hectares") +
+       subtitle = "126,906 hectares") +
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.caption = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5,
+                                 size = 9),
     legend.position = "none",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
@@ -242,10 +243,10 @@ pa_transition_plot <- ggplot(data = pa_transition_long, aes(x = x,
     rect = element_rect(fill = "white", color = NA)
   )
 
-pa_transition_plot
+# pa_transition_plot
 
 # Save
-ggsave(here("Images", "protectedareas_transition_sankey.jpeg"), pa_transition_plot, width = 8, height = 7)
+# ggsave(here("Images", "protectedareas_transition_sankey.jpeg"), pa_transition_plot, width = 8, height = 7)
 
 # Non Protected Areas
 #---------------------------------------
@@ -259,10 +260,11 @@ nonpa_transition_plot <- ggplot(data = nonpa_transition_long, aes(x = x,
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
     labs(title = "Non Protected Areas",
-       caption = "156,820 hectares") +
+       subtitle = "156,820 hectares") +
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.caption = element_text(hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5,
+                                 size = 9),
     legend.position = "none",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
@@ -275,16 +277,19 @@ nonpa_transition_plot <- ggplot(data = nonpa_transition_long, aes(x = x,
     rect = element_rect(fill = "white", color = NA)
   )
 
-nonpa_transition_plot
+# nonpa_transition_plot
 
 # Save
-ggsave(here("Images", "nonprotectedareas_transition_sankey.jpeg"), nonpa_transition_plot, width = 8, height = 7)
+# ggsave(here("Images", "nonprotectedareas_transition_sankey.jpeg"), nonpa_transition_plot, width = 7.5, height = 4)
 
 # Combine
 #---------------------------------------
-transition_patchwork <- (pa_transition_plot | nonpa_transition_plot)
+transition_patchwork <- (pa_transition_plot | nonpa_transition_plot) +
+  plot_layout(guides = "collect") & 
+  theme(legend.position = 'bottom')
 
-transition_patchwork
+
+# transition_patchwork
 
 ggsave(here("Images", "graphicalabstract_patchwork_new.jpeg"), transition_patchwork, width = 7.5, height = 4)
 
@@ -376,11 +381,12 @@ pa_onlychanges_plot <- ggplot(data = pa_changeonly_long, aes(x = x,
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
     labs(title = "Protected Areas",
-       caption = "17,863 hectares") +
+       subtitle = "17,863 hectares") +
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.caption = element_text(hjust = 0.5),
-    legend.position = "none",
+    plot.subtitle = element_text(hjust = 0.5,
+                                 size = 9),
+    legend.position = "bottom",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
     axis.title.x = element_blank(),
@@ -392,7 +398,7 @@ pa_onlychanges_plot <- ggplot(data = pa_changeonly_long, aes(x = x,
     rect = element_rect(fill = "white", color = NA)
   )
 
-pa_onlychanges_plot
+# pa_onlychanges_plot
 
 # Save
 ggsave(here("Images", "protectedareas_onlychanges_sankey.jpeg"), pa_onlychanges_plot, width = 8, height = 7)
@@ -409,11 +415,13 @@ nonpa_changeonly_plot <- ggplot(data = nonpa_changeonly_long, aes(x = x,
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
     labs(title = "Non Protected Areas",
-       caption = "71,692 hectares") +
+       subtitle = "71,692 hectares"
+       ) +
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.caption = element_text(hjust = 0.5),
-    legend.position = "none",
+    plot.subtitle = element_text(hjust = 0.5,
+                                 size = 9),
+    legend.position = "bottom",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
     axis.title.x = element_blank(),
@@ -425,18 +433,20 @@ nonpa_changeonly_plot <- ggplot(data = nonpa_changeonly_long, aes(x = x,
     rect = element_rect(fill = "white", color = NA)
   )
 
-nonpa_changeonly_plot
+# nonpa_changeonly_plot
 
 # Save
 ggsave(here("Images", "nonprotectedareas_changeonly_sankey.jpeg"), nonpa_changeonly_plot, width = 8, height = 7)
 
 # Combine
 #---------------------------------------
-changeonly_patchwork <- (pa_onlychanges_plot | nonpa_changeonly_plot)
+changeonly_patchwork <- (pa_onlychanges_plot | nonpa_changeonly_plot) +
+  plot_layout(guides = "collect") & 
+  theme(legend.position = 'bottom')
 
 changeonly_patchwork
 
-ggsave(here("Images", "graphicalabstract_patchwork_changeonly.jpeg"), changeonly_patchwork, width = 7.5, height = 4)
+ggsave(here("Images", "graphicalabstract_patchwork_changeonly.jpeg"), changeonly_patchwork, width = 8.5, height = 5)
 
 ```
 
