@@ -57,7 +57,7 @@ npa_change_98_19 <- read.csv(here("Protected_Unprotected", "NonPA98-19.csv")) %>
 # Color Palettes
 #---------------------------------------
 class_pallete <- c("Exposed Soil/Urban" = "#feebbe",
-                   "a_Forest" = "#287404",
+                   "Forest" = "#287404",
                    "Grassland/Pasture" = "#e9ffbe",
                    "Mangrove" = "#74ffdf",
                    "Palm" = "#ffff01",
@@ -198,11 +198,18 @@ pa_transition_long <- uncount_pa_transition %>%
 nonpa_transition_long <- uncount_nonpa_transition %>% 
   make_long(lu_1987:lu_2019)
 
-```
+#---------------------------------------
+# Order Nodes
+#---------------------------------------
 
-```{r}
-pa_long_ordered <- pa_transition_long %>% 
-  mutate(node = as.factor(node), levels = c(""))
+# Protected Areas
+#---------------------------------------
+pa_transition_long$node <- factor(pa_transition_long$node, levels =  c("Forest", "Exposed Soil/Urban", "Grassland/Pasture", "Mangrove", "Palm", "Teak/Gmelina", "Water", "Wetland"))
+
+# Non Protected Areas
+#---------------------------------------
+nonpa_transition_long$node <- factor(nonpa_transition_long$node, levels =  c("Forest", "Exposed Soil/Urban", "Grassland/Pasture", "Mangrove", "Palm", "Teak/Gmelina", "Water", "Wetland"))
+
 ```
 
 ```{r}
@@ -338,6 +345,18 @@ pa_changeonly_long <- uncount_pa_changeonly %>%
 #---------------------------------------
 nonpa_changeonly_long <- uncount_nonpa_changeonly %>% 
   make_long(i_lu_1987:lu_2019)
+
+#---------------------------------------
+# Order Nodes
+#---------------------------------------
+
+# Protected Areas
+#---------------------------------------
+pa_changeonly_long$node <- factor(pa_changeonly_long$node, levels =  c("Forest", "Exposed Soil/Urban", "Grassland/Pasture", "Mangrove", "Palm", "Teak/Gmelina", "Water", "Wetland"))
+
+# Non Protected Areas
+#---------------------------------------
+nonpa_changeonly_long$node <- factor(nonpa_changeonly_long$node, levels =  c("Forest", "Exposed Soil/Urban", "Grassland/Pasture", "Mangrove", "Palm", "Teak/Gmelina", "Water", "Wetland"))
   
 ```
 
@@ -357,11 +376,11 @@ pa_onlychanges_plot <- ggplot(data = pa_changeonly_long, aes(x = x,
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
     labs(title = "Protected Areas",
-       subtitle = "17,863 hectares") +
+       caption = "17,863 hectares") +
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust = 0.5),
-    legend.position = "bottom",
+    plot.caption = element_text(hjust = 0.5),
+    legend.position = "none",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
     axis.title.x = element_blank(),
@@ -390,11 +409,11 @@ nonpa_changeonly_plot <- ggplot(data = nonpa_changeonly_long, aes(x = x,
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
     labs(title = "Non Protected Areas",
-       subtitle = "71,692 hectares") +
+       caption = "71,692 hectares") +
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust = 0.5),
-    legend.position = "bottom",
+    plot.caption = element_text(hjust = 0.5),
+    legend.position = "none",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
     axis.title.x = element_blank(),
@@ -417,7 +436,7 @@ changeonly_patchwork <- (pa_onlychanges_plot | nonpa_changeonly_plot)
 
 changeonly_patchwork
 
-ggsave(here("Images", "graphicalabstract_patchwork_changeonly.jpeg"), changeonly_patchwork, width = 8, height = 5)
+ggsave(here("Images", "graphicalabstract_patchwork_changeonly.jpeg"), changeonly_patchwork, width = 7.5, height = 4)
 
 ```
 
