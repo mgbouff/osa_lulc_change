@@ -57,7 +57,7 @@ npa_change_98_19 <- read.csv(here("Protected_Unprotected", "NonPA98-19.csv")) %>
 # Color Palettes
 #---------------------------------------
 class_pallete <- c("Exposed Soil/Urban" = "#feebbe",
-                   "Forest" = "#287404",
+                   "a_Forest" = "#287404",
                    "Grassland/Pasture" = "#e9ffbe",
                    "Mangrove" = "#74ffdf",
                    "Palm" = "#ffff01",
@@ -81,8 +81,8 @@ tidy_pa_transition <- pa_transition %>%
     x87_landuse == 3 ~ "Water",
     x87_landuse == 4 ~ "Grassland/Pasture",
     x87_landuse == 5 ~ "Exposed Soil/Urban",
-    x87_landuse == 6 ~ "Forest",
-    x87_landuse == 7 ~ "Forest",
+    x87_landuse == 6 ~ "a_Forest",
+    x87_landuse == 7 ~ "a_Forest",
     x87_landuse == 8 ~ "Wetland",
     x87_landuse == 9 ~ "Teak/Gmelina"),
     lu_1998 = case_when(
@@ -91,8 +91,8 @@ tidy_pa_transition <- pa_transition %>%
       x98_landuse == 3 ~ "Water",
       x98_landuse == 4 ~ "Grassland/Pasture",
       x98_landuse == 5 ~ "Exposed Soil/Urban",
-      x98_landuse == 6 ~ "Forest",
-      x98_landuse == 7 ~ "Forest",
+      x98_landuse == 6 ~ "a_Forest",
+      x98_landuse == 7 ~ "a_Forest",
       x98_landuse == 8 ~ "Wetland",
       x98_landuse == 9 ~ "Teak/Gmelina"
     ),
@@ -102,8 +102,8 @@ tidy_pa_transition <- pa_transition %>%
       x19_landuse == 3 ~ "Water",
       x19_landuse == 4 ~ "Grassland/Pasture",
       x19_landuse == 5 ~ "Exposed Soil/Urban",
-      x19_landuse == 6 ~ "Forest",
-      x19_landuse == 7 ~ "Forest",
+      x19_landuse == 6 ~ "a_Forest",
+      x19_landuse == 7 ~ "a_Forest",
       x19_landuse == 8 ~ "Wetland",
       x19_landuse == 9 ~ "Teak/Gmelina"
     )) %>% 
@@ -120,8 +120,8 @@ tidy_nonpa_transition <- nonpa_transition %>%
     x87_landuse == 3 ~ "Water",
     x87_landuse == 4 ~ "Grassland/Pasture",
     x87_landuse == 5 ~ "Exposed Soil/Urban",
-    x87_landuse == 6 ~ "Forest",
-    x87_landuse == 7 ~ "Forest",
+    x87_landuse == 6 ~ "a_Forest",
+    x87_landuse == 7 ~ "a_Forest",
     x87_landuse == 8 ~ "Wetland",
     x87_landuse == 9 ~ "Teak/Gmelina"),
     lu_1998 = case_when(
@@ -130,8 +130,8 @@ tidy_nonpa_transition <- nonpa_transition %>%
       x98_landuse == 3 ~ "Water",
       x98_landuse == 4 ~ "Grassland/Pasture",
       x98_landuse == 5 ~ "Exposed Soil/Urban",
-      x98_landuse == 6 ~ "Forest",
-      x98_landuse == 7 ~ "Forest",
+      x98_landuse == 6 ~ "a_Forest",
+      x98_landuse == 7 ~ "a_Forest",
       x98_landuse == 8 ~ "Wetland",
       x98_landuse == 9 ~ "Teak/Gmelina"
     ),
@@ -141,8 +141,8 @@ tidy_nonpa_transition <- nonpa_transition %>%
       x19_landuse == 3 ~ "Water",
       x19_landuse == 4 ~ "Grassland/Pasture",
       x19_landuse == 5 ~ "Exposed Soil/Urban",
-      x19_landuse == 6 ~ "Forest",
-      x19_landuse == 7 ~ "Forest",
+      x19_landuse == 6 ~ "a_Forest",
+      x19_landuse == 7 ~ "a_Forest",
       x19_landuse == 8 ~ "Wetland",
       x19_landuse == 9 ~ "Teak/Gmelina"
     )) %>% 
@@ -200,6 +200,10 @@ nonpa_transition_long <- uncount_nonpa_transition %>%
 
 ```
 
+```{r}
+pa_long_ordered <- pa_transition_long %>% 
+  mutate(node = as.factor(node), levels = c(""))
+```
 
 ```{r}
 #---------------------------------------
@@ -215,11 +219,11 @@ pa_transition_plot <- ggplot(data = pa_transition_long, aes(x = x,
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
     labs(title = "Protected Areas",
-       subtitle = "126,906 hectares") +
+       caption = "126,906 hectares") +
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust = 0.5),
-    legend.position = "bottom",
+    plot.caption = element_text(hjust = 0.5),
+    legend.position = "none",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
     axis.title.x = element_blank(),
@@ -248,11 +252,11 @@ nonpa_transition_plot <- ggplot(data = nonpa_transition_long, aes(x = x,
   scale_fill_manual(values = class_pallete) +
   theme_minimal() +
     labs(title = "Non Protected Areas",
-       subtitle = "156,820 hectares") +
+       caption = "156,820 hectares") +
   theme(
     plot.title = element_text(hjust = 0.5),
-    plot.subtitle = element_text(hjust = 0.5),
-    legend.position = "bottom",
+    plot.caption = element_text(hjust = 0.5),
+    legend.position = "none",
     legend.title = element_blank(),
     axis.text.x = element_text(size = 14, face = "bold"),
     axis.title.x = element_blank(),
@@ -275,9 +279,10 @@ transition_patchwork <- (pa_transition_plot | nonpa_transition_plot)
 
 transition_patchwork
 
-ggsave(here("Images", "graphicalabstract_patchwork_new.jpeg"), transition_patchwork, width = 8, height = 5)
+ggsave(here("Images", "graphicalabstract_patchwork_new.jpeg"), transition_patchwork, width = 7.5, height = 4)
 
 ```
+
 ### Only Changes
 
 ```{r}
